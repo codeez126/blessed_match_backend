@@ -1,0 +1,18 @@
+/* Custom CSS for SweetAlert buttons */
+.swal2-confirm {
+    background-color: #e33b28 !important; /* Custom button background color */
+    color: #ffffff !important; /* Change text color if needed */
+}
+
+.swal2-confirm:hover {
+    background-color: #c32e22 !important; /* Darker shade for hover */
+}
+
+.swal2-cancel {
+    background-color: #ccc; /* Optional: Change cancel button background */
+    color: #333; /* Optional: Change cancel button text color */
+}
+
+.swal2-cancel:hover {
+    background-color: #bbb; /* Optional: Darker shade for cancel hover */
+}
