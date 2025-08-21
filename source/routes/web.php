@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\AdminLocationsController;
-use App\Http\Controllers\Admin\AdminReligionController;
+use App\Http\Controllers\admin\AdminLocationsController;
+use App\Http\Controllers\admin\AdminReligionController;
 use Illuminate\Support\Facades\Route;
 
 
