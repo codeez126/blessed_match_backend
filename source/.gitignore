@@ -1,0 +1,56 @@
+/.phpunit.cache
+/node_modules
+#/public/build
+#/public/hot
+#/public/storage
+#/storage/*.key
+/vendor
+.env
+#.env.backup
+#.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Laravel-specific files
+
+/vendor/
+#/public/hot
+#/public/storage
+#/storage/*.key
+#/storage/app/public
+#/storage/framework/cache/data
+/storage/logs
+
+# Ignore everything in public/build folder except for manifest.json
+#/public/build/*
+#!/public/build/manifest.json
+
+# Node artifact files
+node_modules/
+dist/
+
+# IDE-specific files
+.idea/
+
+# Log files
+*.log
+
+# Debug files
+npm-debug.log
+yarn-error.log
+yarn.lock
+
+# Environment files
+#.env
+#.env.*
+
+# Operating system-specific files
+.DS_Store
+Thumbs.db
