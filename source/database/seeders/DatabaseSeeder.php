@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
 //             HouseSizeSeeder::class,
 //             SkinTypesTableSeeder::class,
 //             OfficeTypesTableSeeder::class,
-             PaymentPlanSeeder::class,
+//             PaymentPlanSeeder::class,
 //             PaymentMethodSeeder::class,
 
 //            MatchMakerProfilesSeeder::class
