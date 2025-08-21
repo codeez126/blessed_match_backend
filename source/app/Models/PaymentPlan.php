@@ -36,6 +36,10 @@ class PaymentPlan extends Model
     {
         return $this->hasMany(UserPlan::class);
     }
+    public function variations()
+    {
+        return $this->hasMany(PaymentPlanVariation::class);
+    }
     /**
      * Scope a query to only include active plans.
      */
