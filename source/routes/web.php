@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
+Route::get('/', function () {
+    return Auth::guard('admin')->check() ? redirect()->route('admin.dashboard') : redirect()->route('adminlogin');
+});
 /** Super Admin and admins routes **/
 Route::get('admin/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'adminloginform'])
     ->name('adminlogin');
