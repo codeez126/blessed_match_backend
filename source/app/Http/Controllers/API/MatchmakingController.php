@@ -427,7 +427,7 @@ class MatchmakingController extends Controller
                     $q->where('receiving_mm_id', Auth::id())
                         ->orWhere('receiving_user_id', Auth::id());
                 })
-                ->orderBy('desc')
+                ->orderBy('id','desc')
                 ->get();
         }
 
