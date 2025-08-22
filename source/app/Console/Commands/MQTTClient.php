@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\ChatMessage;
-use App\Models\ChatRoom;
-use App\Models\RoomUsers;
+//use App\Models\ChatMessage;
+//use App\Models\ChatRoom;
+//use App\Models\RoomUsers;
 use App\Models\User;
 use App\Services\ChatService;
 use Illuminate\Console\Command;
@@ -80,7 +80,7 @@ class MQTTClient extends Command
                         $content = base64_decode($content, true);
                     }
                     $payload = json_decode($content, true);
-                    
+
 
                     $topic = explode('/', $topic);
                     $command = $topic[1] ?? null;

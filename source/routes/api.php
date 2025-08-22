@@ -62,6 +62,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/send-match-request', [\App\Http\Controllers\API\MatchmakingController::class, 'sendMatchRequest']);
     Route::post('/match-request-details', [\App\Http\Controllers\API\MatchmakingController::class, 'matchRequestDetails']);
+    Route::post('/my-match-requests', [\App\Http\Controllers\API\MatchmakingController::class, 'myMatchRequests']);
     Route::post('/update-match-request-status', [\App\Http\Controllers\API\MatchmakingController::class, 'matchRequestStatus']);
 
     Route::post('client-profile', [\App\Http\Controllers\API\AuthController::class, 'clientProfile']);

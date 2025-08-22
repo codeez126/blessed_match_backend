@@ -400,6 +400,42 @@ class MatchmakingController extends Controller
             'data' => $matchRequest
         ]);
     }
+    public function myMatchRequests(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'type' => 'required|integer|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()->first()
+            ], 422);
+        }
+
+        if ($request->type == 1) {
+            $matchRequest = MatchRequest::with(['requestingUser', 'requestingMm', 'receivingUser', 'receivingMm'])
+                ->where(function ($q) {
+                    $q->where('requestingMm', Auth::id())
+                        ->orWhere('requestingUser', Auth::id());
+                })
+                ->get();
+        } else {
+            $matchRequest = MatchRequest::with(['requestingUser', 'requestingMm', 'receivingUser', 'receivingMm'])
+                ->where(function ($q) {
+                    $q->where('receivingMm', Auth::id())
+                        ->orWhere('receivingUser', Auth::id());
+                })
+                ->get();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Match requests fetched',
+            'data' => $matchRequest
+        ]);
+    }
     public function matchRequestStatus(Request $request)
     {
         $validator = Validator::make($request->all(), [
