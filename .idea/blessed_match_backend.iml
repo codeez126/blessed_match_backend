@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/source/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/source/tests/Feature" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/source/tests/Unit" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/source/vendor/barryvdh/laravel-dompdf" />
       <excludeFolder url="file://$MODULE_DIR$/source/vendor/beste/clock" />
       <excludeFolder url="file://$MODULE_DIR$/source/vendor/beste/in-memory-cache" />
@@ -167,6 +169,9 @@
       <excludeFolder url="file://$MODULE_DIR$/source/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/source/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/source/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/source/vendor/workerman/coroutine" />
+      <excludeFolder url="file://$MODULE_DIR$/source/vendor/workerman/mqtt" />
+      <excludeFolder url="file://$MODULE_DIR$/source/vendor/workerman/workerman" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

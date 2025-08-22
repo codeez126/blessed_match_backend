@@ -25,7 +25,7 @@ class PaymentController extends Controller
     }
     public function paymentPlans()
     {
-        $plans = PaymentPlan::with('variations')->get();
+        $plans = PaymentPlan::with('variations')->all();
         if (!$plans){
             return $this->apiResponse(['PaymentPlans' => null], 'PaymentPlans not found', 404);
         }

@@ -176,6 +176,9 @@
       <path value="$PROJECT_DIR$/source/vendor/dflydev/dot-access-data" />
       <path value="$PROJECT_DIR$/source/vendor/mockery/mockery" />
       <path value="$PROJECT_DIR$/source/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/source/vendor/workerman/workerman" />
+      <path value="$PROJECT_DIR$/source/vendor/workerman/mqtt" />
+      <path value="$PROJECT_DIR$/source/vendor/workerman/coroutine" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
