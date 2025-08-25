@@ -68,12 +68,6 @@ class User extends Authenticatable
     }
     public function clientProfileCard($matchPercentage = null)
     {
-        Log::info('Debug Info:', [
-            'user_id' => $this->id,
-            'match_maker_id' => $this->match_maker_id,
-            'mmProfiledetails' => $this->mmProfiledetails,
-            'mmProfiledetails_exists' => $this->mmProfiledetails ? 'YES' : 'NO'
-        ]);
         return [
 
             'id' => $this->id,
@@ -92,6 +86,9 @@ class User extends Authenticatable
             'city' => optional($this->clientBackground->cityRelation ?? null)->name,
             'profile_completed' => optional($this->profileAvg)->total_avg,
             'match_percentage' => $matchPercentage,
+
+            'match_request_send' => $this->sentMatchRequests()->count(),
+            'match_request_received' => $this->receivedMatchRequests()->count(),
 
             'mm_id' => $this->match_maker_id,
             'mm_bussiness_name' => optional($this->mmProfiledetails)->business_name,
