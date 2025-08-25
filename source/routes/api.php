@@ -78,6 +78,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('payment-plans', [\App\Http\Controllers\API\PaymentController::class, 'paymentPlans']);
     Route::post('user-create-payment', [\App\Http\Controllers\API\PaymentController::class, 'userCreatePayment']);
     Route::post('my-payment-history', [\App\Http\Controllers\API\PaymentController::class, 'myPaymentHistory']);
+    Route::post('my-wallet', [\App\Http\Controllers\API\PaymentController::class, 'myWallet']);
 //    admin panel api here is for testing
     Route::post('admin-action-on-payment', [\App\Http\Controllers\API\PaymentController::class, 'adminActionOnPayment']);
 

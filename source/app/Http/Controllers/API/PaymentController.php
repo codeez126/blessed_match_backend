@@ -198,6 +198,25 @@ class PaymentController extends Controller
             );
         }
     }
+
+    public function myWallet()
+    {
+        $userPoints = UserPoint::with('whoAddedReferral.mmProfile')
+            ->where('user_id', Auth::id())
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $totalIn  = $userPoints->where('type', 1)->sum('points');
+        $totalOut = $userPoints->where('type', 2)->sum('points');
+
+        $remainingAmount = $totalIn - $totalOut;
+
+        return $this->apiResponse([
+            'transactions'     => $userPoints,
+            'remaining_amount' => $remainingAmount,
+        ], 'Wallet fetched successfully', 200);
+    }
+
     private function buildReferralChain($startUser, $visited = []) {
         $chain = [];
         $currentUser = $startUser;
