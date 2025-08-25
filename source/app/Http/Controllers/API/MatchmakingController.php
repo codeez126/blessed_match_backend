@@ -356,7 +356,7 @@ class MatchmakingController extends Controller
                 'receiver_id' => $receiverMm,
                 'type' => 'match_request_from_ReqMm_to_ResMm',
                 'type_id' => $matchRequest->id,
-                'title' => 'New Match from Match Maker',
+                'title' => 'New Match Request from Match Maker',
                 'body' => "You have a new match request from Match Maker"
             ];
             $this->sendNotification($data);
@@ -466,31 +466,43 @@ class MatchmakingController extends Controller
             $matchRequest->save();
 
             $authUser = Auth::user();
-            if ($request->status == 1){
-//                request sending to receiving matchmaker
-                $data = [
-                    'sender_id' => $authUser->id,
+            $notifications = [
+                1 => [
                     'receiver_id' => $matchRequest->receiving_mm_id,
                     'type' => 'match_request_from_ReqMm_to_ResMm',
-                    'type_id' => $matchRequest->id,
                     'title' => 'New Match from Match Maker',
                     'body' => "You have a new match request from Match Maker"
-                ];
-                $this->sendNotification($data);
-            }
-            elseif($request->status == 2){
-//                request sending to receiving matchmaker
-                $data = [
-                    'sender_id' => $authUser->id,
+                ],
+                2 => [
                     'receiver_id' => $matchRequest->receiving_user_id,
                     'type' => 'match_request_from_ResMm_to_ResUser',
+                    'title' => 'You have got a match Request',
+                    'body' => "Your Match Maker found a match for you"
+                ],
+                4 => [
+                    'receiver_id' => $matchRequest->requesting_mm_id,
+                    'type' => 'match_request_rejected_from_resMM',
+                    'title' => 'Your Match Request is Rejected',
+                    'body' => "Your Match Request is rejected by other party"
+                ],
+                5 => [
+                    'receiver_id' => $matchRequest->requesting_mm_id,
+                    'type' => 'match_request_accepted',
+                    'title' => 'Congrats! Your Match Request is Accepted',
+                    'body' => "Your Match request is accepted by other party"
+                ],
+            ];
+
+            if ($request->status == 3) {
+                Log::info('No notification in case when requesting party cancels the request');
+            } elseif (isset($notifications[$request->status])) {
+                $data = array_merge($notifications[$request->status], [
+                    'sender_id' => $authUser->id,
                     'type_id' => $matchRequest->id,
-                    'title' => 'New Match from Match Maker',
-                    'body' => "You have a new match request from Match Maker"
-                ];
+                ]);
                 $this->sendNotification($data);
             }
-
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Match request status updated',
