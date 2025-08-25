@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class MatchmakingFilterService
 {
@@ -131,6 +132,7 @@ class MatchmakingFilterService
     {
         $this->activeFilters = $filters;
         $requestingUserId = $filters['requestingUserID'] ?? null;
+        Log::info('Furqang Requesting User ID in Filter Service', ['requestingUserId' => $requestingUserId]);
 
         // Eager load all necessary relationships
         $query = User::with([
