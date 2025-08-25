@@ -111,6 +111,7 @@ class User extends Authenticatable
             'match_request_send' => $this->sentMatchRequests()->count(),
             'match_request_received' => $this->receivedMatchRequests()->count(),
             'match_request' => $matchRequestData, // New field
+            'match_id' => $requestingUserId, // New field
 
             'mm_id' => $this->match_maker_id,
             'mm_bussiness_name' => optional($this->mmProfiledetails)->business_name,
