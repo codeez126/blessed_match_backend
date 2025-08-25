@@ -285,6 +285,7 @@ class MatchmakingController extends Controller
             }
 //            dd($filterRequest);exit();
             // Call findMatches with the prepared request
+            \Log::info('Filter Request Data Before findMatches', ['all_data' => $filterRequest->all()]);
             return $this->findMatches($filterRequest);
 
         } catch (\Exception $e) {
