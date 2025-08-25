@@ -250,6 +250,7 @@ class MatchmakingController extends Controller
             }
 
             $requestData['requestingUserID'] = $request->user_id;
+            Log::info('Setting requestingUserID', ['user_id' => $request->user_id, 'requestData' => $requestData]);
 
             $filterRequest = new Request($requestData);
 
