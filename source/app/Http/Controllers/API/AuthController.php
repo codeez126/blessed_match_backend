@@ -375,7 +375,7 @@ class AuthController extends Controller
                     'experience_years' => $request->experience_years,
                     'address' => $request->address,
                     'office_type_id' => $request->office_type_id,
-                    'my_refral_code' => $user->phone ?? null,
+                    'my_refral_code' => $user->phone ? $user->id . substr($user->phone, -4) : null,
                     'business_email' => $request->business_email,
                     'business_contact' => $request->business_contact,
                     'is_registered' => $request->is_registered,
