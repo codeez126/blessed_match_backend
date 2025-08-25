@@ -130,6 +130,7 @@ class MatchmakingFilterService
     public function getFilteredUsers(array $filters)
     {
         $this->activeFilters = $filters;
+        $requestingUserId = $filters['requestingUserID'] ?? null;
 
         // Eager load all necessary relationships
         $query = User::with([
@@ -140,6 +141,8 @@ class MatchmakingFilterService
             'clientIslamicValue',
             'clientLifeStyle',
             'clientFamilyInfo',
+            'sentMatchRequests',
+            'receivedMatchRequests'
         ]);
 
         // Apply gender filter first (special case - hard filter)
@@ -152,9 +155,9 @@ class MatchmakingFilterService
         // Get all users (after hard filters)
         $users = $query->get();
         // Generate user cards with match percentage
-        $userCards = $users->map(function ($user) {
+        $userCards = $users->map(function ($user) use ($requestingUserId) {
             $matchPercentage = $this->calculateMatchPercentage($user);
-            return $user->clientProfileCard($matchPercentage);
+            return $user->clientProfileCard($matchPercentage, $requestingUserId);
         });
 
 // Sort by match percentage (descending)

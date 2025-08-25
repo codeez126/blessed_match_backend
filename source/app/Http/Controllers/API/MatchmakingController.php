@@ -249,6 +249,8 @@ class MatchmakingController extends Controller
                 $requestData['nationalities'] = $user->nationalities->pluck('id')->toArray();
             }
 
+            $requestData['requestingUserID'] = $request->user_id;
+
             $filterRequest = new Request($requestData);
 
             // Add age filters if available
@@ -502,7 +504,7 @@ class MatchmakingController extends Controller
                 ]);
                 $this->sendNotification($data);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Match request status updated',

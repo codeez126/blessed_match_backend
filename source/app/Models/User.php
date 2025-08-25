@@ -66,10 +66,31 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfileAvg::class);
     }
-    public function clientProfileCard($matchPercentage = null)
+    public function clientProfileCard($matchPercentage = null, $requestingUserId = null)
     {
-        return [
+        $matchRequestData = null;
 
+        if ($requestingUserId) {
+            // Check if there's an existing match request between these users
+            $matchRequest = MatchRequest::where(function ($query) use ($requestingUserId) {
+                $query->where('requesting_user_id', $requestingUserId)
+                    ->where('receiving_user_id', $this->id);
+            })->orWhere(function ($query) use ($requestingUserId) {
+                $query->where('requesting_user_id', $this->id)
+                    ->where('receiving_user_id', $requestingUserId);
+            })->first();
+
+            if ($matchRequest) {
+                $matchRequestData = [
+                    'id' => $matchRequest->id,
+                    'status' => $matchRequest->status,
+                    'status_text' => $matchRequest->status_text,
+                    'is_requester' => $matchRequest->requesting_user_id == $requestingUserId,
+                    'created_at' => $matchRequest->created_at,
+                ];
+            }
+        }
+        return [
             'id' => $this->id,
             'status' => $this->status,
             'is_wish_listed' => $this->isWishListedBy(auth('api')->id()),
@@ -89,6 +110,7 @@ class User extends Authenticatable
 
             'match_request_send' => $this->sentMatchRequests()->count(),
             'match_request_received' => $this->receivedMatchRequests()->count(),
+            'match_request' => $matchRequestData, // New field
 
             'mm_id' => $this->match_maker_id,
             'mm_bussiness_name' => optional($this->mmProfiledetails)->business_name,
