@@ -3,18 +3,30 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeviceToken;
 use App\Models\MmProfile;
+use App\Models\Notification;
 use App\Models\PaymentMethod;
 use App\Models\PaymentPlan;
 use App\Models\User;
 use App\Models\UserPayment;
 use App\Models\UserPoint;
+use App\Services\FirebaseService;
+use App\Services\MatchmakingFilterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
+    protected FirebaseService $firebaseService;
+
+    public function __construct(
+        FirebaseService $firebaseService
+    ) {
+        $this->firebaseService = $firebaseService;
+    }
     public function paymentMethods()
     {
         $methods = PaymentMethod::all();
@@ -198,25 +210,6 @@ class PaymentController extends Controller
             );
         }
     }
-
-    public function myWallet()
-    {
-        $userPoints = UserPoint::with('whoAddedReferral.mmProfile')
-            ->where('user_id', Auth::id())
-            ->orderBy('id', 'desc')
-            ->get();
-
-        $totalIn  = $userPoints->where('type', 1)->sum('points');
-        $totalOut = $userPoints->where('type', 2)->sum('points');
-
-        $remainingAmount = $totalIn - $totalOut;
-
-        return $this->apiResponse([
-            'transactions'     => $userPoints,
-            'remaining_amount' => $remainingAmount,
-        ], 'Wallet fetched successfully', 200);
-    }
-
     private function buildReferralChain($startUser, $visited = []) {
         $chain = [];
         $currentUser = $startUser;
@@ -243,7 +236,7 @@ class PaymentController extends Controller
     }
 
     private function addPointsToUser($userId, $points, $whoAddReferalId = null, $transactionId = null) {
-        UserPoint::create([
+        $Userpoints =UserPoint::create([
             'user_id' => $userId,
             'type' => 1, // 1 = IN (points coming in)
             'points' => $points,
@@ -251,6 +244,64 @@ class PaymentController extends Controller
             'transaction_id' => $transactionId, // You can pass payment_id here
             'who_add_referal' => $whoAddReferalId, // ID of the user who made the payment
         ]);
+
+        if ($Userpoints){
+        try {
+            // Get device tokens for the receiver
+            $notificationReceiver = DeviceToken::where('user_id', $userId)
+                ->pluck('device_token');
+
+            if ($notificationReceiver->isEmpty()) {
+                Log::error('No device token found for user ID: ' .$userId);
+                return false;
+            }
+
+            $payload =[
+                'type' => 'referral_points_received',
+                'type_id' => $Userpoints->id,
+                'status' => 0,
+                'sender_id' => $whoAddReferalId,
+                'receiving_user_id' => $userId
+            ];
+            // Send notification via Firebase
+            $this->firebaseService->sendNotification(
+                target: $notificationReceiver,
+                title: 'Congrats! you have got '.$points.' Rs',
+                body: 'you have got '.$points.' from your Referral code ',
+                payload: $payload
+            );
+            Notification::create([
+                'user_id' => $userId,
+                'title' => 'Congrats! you have got '.$points.' Rs',
+                'body' => 'you have got '.$points.' from your Referral code ',
+                'payload' => $payload,
+                'status' => 0
+            ]);
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('Error sending notification: ' . $e->getMessage());
+            return false;
+        }
+        }
+    }
+
+    public function myWallet()
+    {
+        $userPoints = UserPoint::with('whoAddedReferral.mmProfile')
+            ->where('user_id', Auth::id())
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $totalIn  = $userPoints->where('type', 1)->sum('points');
+        $totalOut = $userPoints->where('type', 2)->sum('points');
+
+        $remainingAmount = $totalIn - $totalOut;
+
+        return $this->apiResponse([
+            'transactions'     => $userPoints,
+            'remaining_amount' => $remainingAmount,
+        ], 'Wallet fetched successfully', 200);
     }
 
 }
