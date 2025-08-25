@@ -13,6 +13,7 @@ class MatchRequest extends Model
         'receiving_mm_id',
         'status', // See STATUS_* constants below
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     const STATUS_REQUESTING_MM_REVIEW = 0;
     const STATUS_RECEIVING_MM_REVIEW = 1;
