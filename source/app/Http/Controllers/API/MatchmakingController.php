@@ -424,11 +424,11 @@ class MatchmakingController extends Controller
         if ($request->type == 1) {
             $matchRequest = MatchRequest::with([
                 'requestingUser.clientAbout',
-                'requestingUser.profile_avg_total ',
+                'requestingUser.profileAvgTotal',
                 'requestingMm.mmProfile',
                 'receivingUser.clientAbout',
                 'receivingMm.mmProfile',
-                'receivingUser.profile_avg_total '
+                'receivingUser.profileAvgTotal'
                 ])
                 ->where(function ($q) {
                     $q->where('requesting_mm_id', Auth::id())
@@ -439,11 +439,11 @@ class MatchmakingController extends Controller
         } else {
             $matchRequest = MatchRequest::with([
                 'requestingUser.clientAbout',
-                'requestingUser.profile_avg_total',
+                'requestingUser.profileAvgTotal',
                 'requestingMm.mmProfile',
                 'receivingUser.clientAbout',
                 'receivingMm.mmProfile',
-                'receivingUser.profile_avg_total'
+                'receivingUser.profileAvgTotal'
             ])
                 ->where(function ($q) {
                     $q->where('receiving_mm_id', Auth::id())
