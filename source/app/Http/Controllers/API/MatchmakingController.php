@@ -399,7 +399,8 @@ class MatchmakingController extends Controller
                 'errors' => $validator->errors()->first()
             ], 422);
         }
-        $matchRequest = MatchRequest::with(['requestingUser', 'requestingMm', 'receivingUser', 'receivingMm'])->find($request->match_id);
+        $matchRequest = MatchRequest::withFullUserDetails()->find($request->match_id);
+//        $matchRequest = MatchRequest::with(['requestingUser', 'requestingMm', 'receivingUser', 'receivingMm'])->find($request->match_id);
         return response()->json([
             'success' => true,
             'message' => 'Match request featched',

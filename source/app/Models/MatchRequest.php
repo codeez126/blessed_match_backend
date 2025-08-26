@@ -60,4 +60,40 @@ class MatchRequest extends Model
             default => 'Unknown Status',
         };
     }
+
+    public function scopeWithFullUserDetails($query)
+    {
+        $userRelations = [
+            'clientAbout',
+            'clientFamilyMembers',
+            'clientBackground',
+            'clientBackground.province',
+            'clientBackground.city',
+            'clientBackground.area',
+            'clientFamilyInfo',
+            'clientProfession',
+            'clientProfession.education',
+            'clientProfession.occupation',
+            'userBusinesses',
+            'clientIslamicValue',
+            'clientIslamicValue.religion',
+            'clientIslamicValue.sect',
+            'clientIslamicValue.cast',
+            'clientLifeStyle',
+            'nationalities',
+            'clientLanguages.language',
+            'clientImages',
+        ];
+
+        return $query->with([
+            'requestingUser' => function($query) use ($userRelations) {
+                $query->with($userRelations);
+            },
+            'requestingMm',
+            'receivingUser' => function($query) use ($userRelations) {
+                $query->with($userRelations);
+            },
+            'receivingMm'
+        ]);
+    }
 }
