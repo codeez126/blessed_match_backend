@@ -66,10 +66,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfileAvg::class);
     }
-    public function getProfileAvgTotalAttribute()
-    {
-        return $this->profileAvg?->total_avg;
-    }
+    
     public function clientProfileCard($matchPercentage = null, $requestingUserId = null)
     {
         $matchRequestData = null;
