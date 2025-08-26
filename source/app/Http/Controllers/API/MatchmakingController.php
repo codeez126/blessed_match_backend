@@ -422,7 +422,7 @@ class MatchmakingController extends Controller
         }
 
         if ($request->type == 1) {
-            $matchRequest = MatchRequest::with(['requestingUser.clientAbout', 'requestingMm.mmProfile', 'receivingUser.clientAbout', 'receivingMm.mmProfile'])
+            $matchRequest = MatchRequest::with(['requestingUser.clientAbout.profileAvg', 'requestingMm.mmProfile', 'receivingUser.clientAbout', 'receivingMm.mmProfile'])
                 ->where(function ($q) {
                     $q->where('requesting_mm_id', Auth::id())
                         ->orWhere('requesting_user_id', Auth::id());

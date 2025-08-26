@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\admin\AdminLocationsController;
 use App\Http\Controllers\admin\AdminReligionController;
+use App\Http\Controllers\admin\AdminPaymentsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -71,13 +72,10 @@ Route::middleware('superAdminAuth')->prefix('admin')->group(function(){
     // AJAX Routes
     Route::post('/cities/check-name', [AdminLocationsController::class, 'checkName'])->name('admin.cities.check-name');
 
+    // Area Routes
+    Route::get('/payments/pending', [AdminPaymentsController::class, 'pending'])->name('admin.payment.pending');
 
 
 });
-
-//Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('HomePage');
-//Route::get('/signup', [\App\Http\Controllers\HomeController::class, 'signup'])->name('signup.page');
-//Route::get('/login', [\App\Http\Controllers\HomeController::class, 'login'])->name('login.page');
-//Route::get('/onboarding_1', [\App\Http\Controllers\HomeController::class, 'onboarding1'])->name('onboarding1.page');
 
 require __DIR__.'/auth.php';

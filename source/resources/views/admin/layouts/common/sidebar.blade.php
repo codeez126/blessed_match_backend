@@ -32,6 +32,17 @@
                         <svg class="stroke-icon">
                             <use href="{{ asset('assets/admin/theme/svg/iconly-sprite.svg#Document') }}"></use>
                         </svg>
+                        <span>Payments</span></a>
+                    <ul class="sidebar-submenu">
+                        <li><a href="{{route('admin.payment.pending')}}">Pending</a></li>
+                        <li><a href="{{route('admin.provinces.index')}}">Approved</a></li>
+                        <li><a href="{{route('admin.cities.index')}}">Rejected</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="#">
+                        <svg class="stroke-icon">
+                            <use href="{{ asset('assets/admin/theme/svg/iconly-sprite.svg#Document') }}"></use>
+                        </svg>
                        <span>Locations</span></a>
                     <ul class="sidebar-submenu">
                         <li><a href="{{route('admin.countries.index')}}">Countries</a></li>

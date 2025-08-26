@@ -15,10 +15,11 @@ class UserPayment extends Model
     const TYPE_OTHER_PAYMENT = 2;
 
     // Payment status constants
-    const STATUS_PENDING = 1;
-    const STATUS_COMPLETED = 2;
-    const STATUS_FAILED = 3;
-    const STATUS_REFUNDED = 4;
+    const STATUS_PENDING = 0;
+    const STATUS_COMPLETED = 1;
+    const STATUS_FAILED = 2;
+    const STATUS_REFUNDED = 3;
+    const STATUS_REJECTED = 4;
 
     // Payment method constants
     const METHOD_CARD = 0;
