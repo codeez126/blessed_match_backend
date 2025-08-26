@@ -21,8 +21,7 @@ class ChatController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'receiver_id' => 'nullable|exists:users,id|different:user_id',
-            'room_name' => 'required',
-
+            'room_name' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -31,7 +30,7 @@ class ChatController extends Controller
         $user = Auth::user();
         $receiver = User::find($request->receiver_id) ?? null;
         $chatRoom = ChatRoom::create([
-            'name' => $request->room_name?? null,
+            'name' => $request->room_name?? 'Chat',
             'auth_user_id' => $user->id,
             'receiver_id' => $request->receiver_id ?? null,
         ]);
