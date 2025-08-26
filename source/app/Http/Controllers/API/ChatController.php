@@ -4,14 +4,54 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChatRoom;
+use App\Models\ChatRoomUsers;
 use App\Models\Media;
+use App\Models\RoomUser;
+use App\Models\User;
 use App\Services\ChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
 
+    public function createRoom(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'receiver_id' => 'nullable|exists:users,id|different:user_id',
+            'room_name' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $user = Auth::user();
+        $receiver = User::find($request->receiver_id) ?? null;
+        $chatRoom = ChatRoom::create([
+            'name' => $request->room_name?? null,
+            'auth_user_id' => $user->id,
+            'receiver_id' => $request->receiver_id ?? null,
+        ]);
+        RoomUser::updateOrCreate([
+            'chat_room_id' => $chatRoom->id,
+            'user_id' => $user->id,
+        ]);
+        if (!empty($receiver)) {
+            RoomUser::updateOrCreate([
+                'chat_room_id' => $chatRoom->id,
+                'user_id' => $receiver,
+            ]);
+        }
+        $message = "Room {$chatRoom->name} Created Successfully";
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => ChatRoom::find($chatRoom->id),
+        ]);
+    }
     public function chatHistory(Request $request)
     {
         try {

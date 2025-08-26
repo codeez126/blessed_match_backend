@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/update-setting', [\App\Http\Controllers\API\AuthController::class, 'updateSetting']);
     Route::post('/logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
 
+    Route::post('/create-room', [\App\Http\Controllers\API\ChatController::class, 'createRoom']);
     Route::post('/chat-history', [\App\Http\Controllers\API\ChatController::class, 'chatHistory']);
     Route::post('/chat-conversions', [\App\Http\Controllers\API\ChatController::class, 'chatConversions']);
     Route::post('upload-chat-file', [\App\Http\Controllers\API\ChatController::class, 'uploadChatFile']);
