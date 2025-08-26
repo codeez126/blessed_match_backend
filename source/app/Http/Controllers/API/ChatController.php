@@ -41,7 +41,7 @@ class ChatController extends Controller
         if (!empty($receiver)) {
             RoomUser::updateOrCreate([
                 'chat_room_id' => $chatRoom->id,
-                'user_id' => $receiver,
+                'user_id' => $receiver->id,
             ]);
         }
         $message = "Room {$chatRoom->name} Created Successfully";
