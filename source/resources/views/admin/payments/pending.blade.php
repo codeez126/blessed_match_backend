@@ -65,10 +65,10 @@
                                 <thead>
                                 <tr class="text-center" style="background-color: transparent !important;">
                                     <th>No.</th>
-                                    <th>Payment Method</th>
+                                    <th>Package</th>
                                     <th>Payment Proof</th>
                                     <th>Amount</th>
-                                    <th>Transaction Details</th>
+                                    <th>Payment Method</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
@@ -76,24 +76,26 @@
                                 @foreach($pending as $index => $item)
                                     <tr class="text-center">
                                         <th>{{ $index+1 }}</th>
-                                        <td>{{ $item->payment_method }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info view-plan"
+                                                    data-title="{{ $item->paymentPlan->title }}"
+                                                    data-description="{{ $item->paymentPlan->description }}"
+                                                    data-price="{{ $item->paymentPlan->price }}"
+                                                    data-duration="{{ $item->paymentPlan->duration_days }}"
+                                                    data-features='@json($item->paymentPlan->features)'>
+                                                {{ $item->paymentPlan->title }} ({{ $item->variations->duration_days }})
+                                            </button>
+                                        </td>
                                         <td>
                                             <img src="{{ asset($item->payment_proof) }}" width="50" class="clickable-image">
                                         </td>
-                                        <td>{{ $item->Amount }}</td>
-                                        <td>{{ $item->type_id }}</td>
+                                        <td>{{ $item->amount }}</td>
+                                        <td>{{ $item->type_id_name }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('admin.countries.edit', $item->id) }}" class="btn btn-sm btn-success">
                                                 <i class="fa fa-pencil-alt"></i> Edit
                                             </a>
-                                            {{--                                            <form action="{{ route('admin.countries.destroy', $country->id) }}" method="POST" style="display: inline-block;">--}}
-                                            {{--                                                @csrf--}}
-                                            {{--                                                @method('DELETE')--}}
-                                            {{--                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">--}}
-                                            {{--                                                    <i class="fa fa-trash"></i> Delete--}}
-                                            {{--                                                </button>--}}
-                                            {{--                                            </form>--}}
-                                        </td>
+                                            </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -112,6 +114,29 @@
         <span class="close">&times;</span>
         <img id="modalImage">
     </div>
+{{--    payment plans model--}}
+    <div id="planModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <span class="close-btn">&times;</span>
+            <h3 id="planTitle"></h3>
+            <p id="planDescription"></p>
+            <p><strong>Price:</strong> <span id="planPrice"></span> <span id="planCurrency"></span></p>
+            <p><strong>Duration:</strong> <span id="planDuration"></span> days</p>
+            <h5>Features:</h5>
+            <ul id="planFeatures"></ul>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: #fff; padding: 20px; border-radius: 8px; max-width: 500px; width: 90%;
+        }
+        .close-btn { float: right; cursor: pointer; font-size: 20px; }
+    </style>
 
 
 
@@ -139,5 +164,38 @@
             })
         })
     </script>
+{{--    payment plans--}}
+<script>
+    document.querySelectorAll('.view-plan').forEach(button => {
+        button.addEventListener('click', function () {
+            document.getElementById('planTitle').innerText = this.dataset.title;
+            document.getElementById('planDescription').innerText = this.dataset.description;
+            document.getElementById('planPrice').innerText = this.dataset.price;
+            document.getElementById('planCurrency').innerText = this.dataset.currency;
+            document.getElementById('planDuration').innerText = this.dataset.duration;
 
+            let features = JSON.parse(this.dataset.features);
+            let featuresList = document.getElementById('planFeatures');
+            featuresList.innerHTML = '';
+            features.forEach(f => {
+                let li = document.createElement('li');
+                li.textContent = f;
+                featuresList.appendChild(li);
+            });
+
+            document.getElementById('planModal').style.display = 'flex';
+        });
+    });
+
+    document.querySelector('#planModal .close-btn').addEventListener('click', () => {
+        document.getElementById('planModal').style.display = 'none';
+    });
+
+    document.getElementById('planModal').addEventListener('click', (e) => {
+        if (e.target.id === 'planModal') {
+            document.getElementById('planModal').style.display = 'none';
+        }
+    });
+
+</script>
 @endsection

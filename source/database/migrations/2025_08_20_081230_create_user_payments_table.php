@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('type')->default(1); // 1 = plan_purchase, 2 = other_payments
             $table->unsignedBigInteger('type_id')->nullable(); // References payment_plan_id or other entity ID
+            $table->unsignedBigInteger('variation_id')->nullable(); // References payment_plan_variation_id or other entity ID
             $table->decimal('amount', 10, 2);
             $table->string('currency', 3)->default('PKR');
             $table->tinyInteger('payment_method')->default(1);

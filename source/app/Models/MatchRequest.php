@@ -84,6 +84,7 @@ class MatchRequest extends Model
             'nationalities',
             'clientLanguages.language',
             'clientImages',
+            'clientHobbies'
         ];
 
         $mmRelations = [

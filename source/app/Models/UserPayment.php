@@ -32,6 +32,7 @@ class UserPayment extends Model
         'user_id',
         'type',
         'type_id',
+        'variation_id',
         'amount',
         'currency',
         'payment_method',
@@ -59,14 +60,14 @@ class UserPayment extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Get the payment plan for plan purchases.
-     */
     public function paymentPlan(): BelongsTo
     {
-        return $this->belongsTo(PaymentPlan::class, 'type_id')
-            ->where('type', self::TYPE_PLAN_PURCHASE);
+        return $this->belongsTo(PaymentPlan::class, 'type_id');
+    }
+
+    public function variation(): BelongsTo
+    {
+        return $this->belongsTo(PaymentPlanVariation::class, 'variation_id');
     }
 
     /**
@@ -193,6 +194,18 @@ class UserPayment extends Model
             self::STATUS_REFUNDED => 'Refunded',
             default => 'Unknown',
         };
+    }
+    public function getTypeIdNameAttribute()
+    {
+        $methods = [
+            self::METHOD_CARD => 'Card',
+            self::METHOD_PAYPAL => 'PayPal',
+            self::METHOD_BANK_TRANSFER => 'Bank Transfer',
+            self::METHOD_STRIPE => 'Stripe',
+            self::METHOD_CASH => 'Cash',
+        ];
+
+        return $methods[$this->type_id] ?? 'Unknown';
     }
 
     /**
