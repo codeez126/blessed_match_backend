@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function associatedUsers()
     {
-        return $this->hasMany(User::class, 'match_maker_id');
+        return $this->hasMany(User::class, 'match_maker_id')->latest();
     }
     public function mmProfile()
     {
