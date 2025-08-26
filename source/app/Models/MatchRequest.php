@@ -64,6 +64,7 @@ class MatchRequest extends Model
     public function scopeWithFullUserDetails($query)
     {
         $userRelations = [
+            'profileAvg',
             'clientAbout',
             'clientFamilyMembers',
             'clientBackground',
