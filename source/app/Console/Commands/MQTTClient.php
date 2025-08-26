@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-//use App\Models\ChatMessage;
-//use App\Models\ChatRoom;
-//use App\Models\RoomUsers;
+use App\Models\ChatMessage;
+use App\Models\ChatRoom;
+use App\Models\RoomUser;
 use App\Models\User;
 use App\Services\ChatService;
 use Illuminate\Console\Command;

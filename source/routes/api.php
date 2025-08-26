@@ -38,6 +38,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/update-setting', [\App\Http\Controllers\API\AuthController::class, 'updateSetting']);
     Route::post('/logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
 
+    Route::post('/chat-history', [\App\Http\Controllers\API\ChatController::class, 'chatHistory']);
+    Route::post('/chat-conversions', [\App\Http\Controllers\API\ChatController::class, 'chatConversions']);
+    Route::post('upload-chat-file', [\App\Http\Controllers\API\ChatController::class, 'uploadChatFile']);
 
     Route::post('get-countries', [\App\Http\Controllers\API\HomeController::class, 'getCountries']);
     Route::post('get-area/{city_id}', [\App\Http\Controllers\API\HomeController::class, 'getArea']);
@@ -82,6 +85,5 @@ Route::middleware('auth:api')->group(function () {
 //    admin panel api here is for testing
     Route::post('admin-action-on-payment', [\App\Http\Controllers\API\PaymentController::class, 'adminActionOnPayment']);
 
-    Route::post('upload-chat-file', [\App\Http\Controllers\API\ChatController::class, 'uploadChatFile']);
 
 });

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\Media;
-use App\Models\RoomUsers;
+use App\Models\RoomUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -69,11 +69,11 @@ class ChatService
             ]));
             echo "joined " . $chatRoom->id . "\n";
 
-            RoomUsers::updateOrCreate([
+            RoomUser::updateOrCreate([
                 'user_id' => $user->id,
                 'chat_room_id' => $chatRoom->id
             ], ['is_online' => 1]);
-            $receiverOnlineStatus = RoomUsers::firstOrCreate([
+            $receiverOnlineStatus = RoomUser::firstOrCreate([
                 'user_id' => $receiver->id,
                 'chat_room_id' => $chatRoom->id
             ]);
@@ -133,7 +133,7 @@ class ChatService
                 ]));
                 return;
             }
-            $offlineUsers = RoomUsers::where('chat_room_id', $data['room_id'])
+            $offlineUsers = RoomUser::where('chat_room_id', $data['room_id'])
                 ->where('is_online', 0)
                 ->count();
 
@@ -196,7 +196,7 @@ class ChatService
         }
 
         $uId = $data['user_id'] ?? null;
-        RoomUsers::where('user_id', $uId)->update([
+        RoomUser::where('user_id', $uId)->update([
             'is_online' => $data['is_online'],
         ]);
     }
