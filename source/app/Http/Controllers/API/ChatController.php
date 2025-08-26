@@ -27,28 +27,51 @@ class ChatController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
         $user = Auth::user();
-        $receiver = User::find($request->receiver_id) ?? null;
+        $receiverId = $request->receiver_id;
+
+        // check if group already exists (in both directions)
+        $existingRoom = ChatRoom::where(function ($q) use ($user, $receiverId) {
+            $q->where('auth_user_id', $user->id)
+                ->where('receiver_id', $receiverId);
+        })->orWhere(function ($q) use ($user, $receiverId) {
+            $q->where('auth_user_id', $receiverId)
+                ->where('receiver_id', $user->id);
+        })->first();
+
+        if ($existingRoom) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Group is already available',
+                'data' => $existingRoom,
+            ]);
+        }
+
+        // create new chat room if not exists
         $chatRoom = ChatRoom::create([
-            'name' => $request->room_name?? 'Chat',
+            'name' => $request->room_name ?? 'Chat',
             'auth_user_id' => $user->id,
-            'receiver_id' => $request->receiver_id ?? null,
+            'receiver_id' => $receiverId ?? null,
         ]);
+
+        // attach users
         RoomUser::updateOrCreate([
             'chat_room_id' => $chatRoom->id,
             'user_id' => $user->id,
         ]);
-        if (!empty($receiver)) {
+
+        if ($receiverId) {
             RoomUser::updateOrCreate([
                 'chat_room_id' => $chatRoom->id,
-                'user_id' => $receiver->id,
+                'user_id' => $receiverId,
             ]);
         }
-        $message = "Room {$chatRoom->name} Created Successfully";
+
         return response()->json([
             'status' => true,
-            'message' => $message,
-            'data' => ChatRoom::find($chatRoom->id),
+            'message' => "Room {$chatRoom->name} Created Successfully",
+            'data' => $chatRoom,
         ]);
     }
     public function chatHistory(Request $request)
