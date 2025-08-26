@@ -85,15 +85,22 @@ class MatchRequest extends Model
             'clientImages',
         ];
 
+        $mmRelations = [
+            'mmProfile',
+        ];
+
         return $query->with([
             'requestingUser' => function($query) use ($userRelations) {
                 $query->with($userRelations);
             },
-            'requestingMm',
+            'requestingMm' => function($query) use ($mmRelations) {
+                $query->with($mmRelations);
+            },
             'receivingUser' => function($query) use ($userRelations) {
                 $query->with($userRelations);
             },
-            'receivingMm'
+            'receivingMm' => function($query) use ($mmRelations) {
+                $query->with($mmRelations);
+            }
         ]);
-    }
-}
+    }}
