@@ -428,7 +428,7 @@ class MatchmakingController extends Controller
                 'requestingMm.mmProfile',
                 'receivingUser.clientAbout',
                 'receivingMm.mmProfile',
-                'requestingUser.profileAvg'
+                'receivingUser.profileAvg'
                 ])
                 ->where(function ($q) {
                     $q->where('requesting_mm_id', Auth::id())
@@ -443,7 +443,7 @@ class MatchmakingController extends Controller
                 'requestingMm.mmProfile',
                 'receivingUser.clientAbout',
                 'receivingMm.mmProfile',
-                'requestingUser.profileAvg'
+                'receivingUser.profileAvg'
             ])
                 ->where(function ($q) {
                     $q->where('receiving_mm_id', Auth::id())
