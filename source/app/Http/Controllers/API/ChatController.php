@@ -141,12 +141,18 @@ class ChatController extends Controller
 
             //  file
             $file = $request->file('file');
+            $filePath = 'assets/images/match-makers/';
             $filePathName = $uniqId . '.' . $file->getClientOriginalExtension();
-            $filePath = $file->storeAs('temp', $filePathName, 'public');
+            $file->move($filePath, $filePathName);
+            $fullPath = $filePath . $filePathName;
+
+
+
+
             $user = Auth::guard('api')->user();
             $media = Media::create([
                 'type' => $request->input('type'),
-                'file_path' => $filePath,
+                'file_path' => $fullPath,
                 'file_name' => $file->getClientOriginalName(),
                 'file_size' => $this->formatBytes($file->getSize()),
                 'file_mime' => $file->getClientMimeType(),
