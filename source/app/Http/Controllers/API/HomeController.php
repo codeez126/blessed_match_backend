@@ -54,6 +54,7 @@ class HomeController extends Controller
             ],
              'device_token' => $deviceToken,
              'is_login' => $is_login,
+              'requestingUserId' => $loggedInUser ? $loggedInUser->id : null,
         ], 'Cards get successfully');
     }
 
