@@ -45,6 +45,7 @@ class HomeController extends Controller
         $clients = User::where('type', 0)->orderBy('id', 'desc')->paginate($perPage);
         $cards = $clients->map(function ($client) use ($loggedInUser) {
             $cardMM = $client->match_maker_id;
+            $chatRoom = null;
             if ($loggedInUser && $cardMM) {
                 $chatRoom = ChatRoom::where(function ($query) use ($cardMM, $loggedInUser) {
                     $query->where('auth_user_id', $cardMM)
