@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Area;
+use App\Models\ChatRoom;
 use App\Models\Country;
 use App\Models\Education;
 use App\Models\EmploymentStatus;
@@ -42,10 +43,24 @@ class HomeController extends Controller
 
         $perPage = $request->get('per_page', 50);
         $clients = User::where('type', 0)->orderBy('id', 'desc')->paginate($perPage);
-        $cards = $clients->map(function ($client) {
-            Log::info('furqan data is'.$client);
-            return $client->clientProfileCard();
+        $cards = $clients->map(function ($client) use ($loggedInUser) {
+            $cardMM = $client->match_maker_id;
+            $chatRoom = ChatRoom::where(function($query) use ($cardMM, $loggedInUser) {
+                $query->where('auth_user_id', $cardMM)
+                    ->where('receiver_id', $loggedInUser->id);
+            })
+                ->orWhere(function($query) use ($cardMM, $loggedInUser) {
+                    $query->where('receiver_id', $cardMM)
+                        ->where('auth_user_id', $loggedInUser->id);
+                })
+                ->first();
+
+            $card = $client->clientProfileCard();
+            $card['chat_room_id'] = $chatRoom ? $chatRoom->id : null;
+
+            return $card;
         });
+
         return $this->apiResponse([
             'cards' => $cards,
             'pagination' => [
