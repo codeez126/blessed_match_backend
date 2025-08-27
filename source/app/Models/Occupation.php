@@ -13,6 +13,10 @@ class Occupation extends Model
     protected $fillable = ['name'];
 
 
+    public function occupation()
+    {
+        return $this->belongsTo(Occupation::class, 'occupation_id');
+    }
 
 
 }

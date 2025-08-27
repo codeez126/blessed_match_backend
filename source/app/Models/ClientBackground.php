@@ -42,6 +42,7 @@ class ClientBackground extends Model
     {
         return $this->belongsTo(City::class, 'city');
     }
+
     public function cityRelation()
     {
         return $this->belongsTo(City::class, 'city');

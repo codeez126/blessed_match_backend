@@ -29,6 +29,8 @@ class ClientProfession extends Model
     {
         return $this->belongsTo(Education::class);
     }
+
+
     public function occupation()
     {
         return $this->belongsTo(Occupation::class, 'occupation');

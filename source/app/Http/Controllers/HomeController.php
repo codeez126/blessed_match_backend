@@ -42,7 +42,7 @@ class HomeController extends Controller
             'clientFamilyInfo',
             'clientProfession',
             'clientProfession.education',
-            'clientProfession.occupation',
+            'clientProfession.occupationRelation',
             'userBusinesses',
             'clientIslamicValue',
             'clientIslamicValue.religion',
@@ -54,7 +54,7 @@ class HomeController extends Controller
             'clientImages',
         ])->where('share_code', $share_code)->first();
 
-//        dd($user);
+//        dd($user->clientProfession);exit();
         return view('clientProfile',[
             'user' => $user,
         ]);
