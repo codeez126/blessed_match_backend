@@ -141,25 +141,29 @@ class ChatController extends Controller
 
             //  file
             $file = $request->file('file');
-            $filePath = 'assets/images/match-makers/';
+
+            $fileOriginalName = $file->getClientOriginalName();
+            $fileSize = $this->formatBytes($file->getSize());
+            $fileMime = $file->getClientMimeType();
+
+            $filePath = 'assets/images/chat/';
             $filePathName = $uniqId . '.' . $file->getClientOriginalExtension();
             $file->move($filePath, $filePathName);
+
             $fullPath = $filePath . $filePathName;
-
-
-
 
             $user = Auth::guard('api')->user();
             $media = Media::create([
                 'type' => $request->input('type'),
                 'file_path' => $fullPath,
-                'file_name' => $file->getClientOriginalName(),
-                'file_size' => $this->formatBytes($file->getSize()),
-                'file_mime' => $file->getClientMimeType(),
+                'file_name' => $fileOriginalName,
+                'file_size' => $fileSize,
+                'file_mime' => $fileMime,
                 'file_thumbnail' => $thumbnailPath,
                 'user_id' => $user->id ?? null,
-                'audio_duration'=>request('audio_duration'),
+                'audio_duration' => $request->input('audio_duration'),
             ]);
+
 
             return response()->json([
                 'message' => 'File uploadZed successfully',
