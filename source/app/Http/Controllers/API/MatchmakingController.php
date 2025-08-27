@@ -152,7 +152,7 @@ class MatchmakingController extends Controller
             $loggedInUserId = $loggedInUser->id;
 
             if($loggedInUser && $loggedInUserId && !empty($results)){
-                $filteredUserIds = $results->pluck('id')->toArray();
+                $filteredUserIds = $results->pluck('match_maker_id')->toArray();
 
                 // Get existing chat rooms between auth user and filtered users
                 $existingChatRooms = \App\Models\ChatRoom::where(function($query) use ($loggedInUserId, $filteredUserIds) {
