@@ -71,7 +71,7 @@ class User extends Authenticatable
     public function clientProfileCard($matchPercentage = null, $requestingUserId = null)
     {
         $matchRequestData = null;
-
+        $chatRoomId = null;
         if ($requestingUserId) {
             // Check if there's an existing match request between these users
             $matchRequest = MatchRequest::where(function ($query) use ($requestingUserId) {
