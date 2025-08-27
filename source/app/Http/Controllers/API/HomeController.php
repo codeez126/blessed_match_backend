@@ -41,8 +41,12 @@ class HomeController extends Controller
 
         $perPage = $request->get('per_page', 50);
         $clients = User::where('type', 0)->orderBy('id', 'desc')->paginate($perPage);
-        $cards = $clients->map(function ($client) {
-            return $client->clientProfileCard(); // Call the method properly
+        $loggedInUserId = auth('api')->id();
+//        $cards = $clients->map(function ($client) {
+//            return $client->clientProfileCard(); // Call the method properly
+//        });
+        $cards = $clients->map(function ($client) use ($loggedInUserId) {
+            return $client->clientProfileCard($loggedInUserId);
         });
         return $this->apiResponse([
             'cards' => $cards,
@@ -54,7 +58,6 @@ class HomeController extends Controller
             ],
              'device_token' => $deviceToken,
              'is_login' => $is_login,
-              'requestingUserId' => $loggedInUser ? $loggedInUser->id : null,
         ], 'Cards get successfully');
     }
 
