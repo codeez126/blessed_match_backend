@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -118,6 +119,7 @@ class AuthController extends Controller
                 'email' => $request->email ?? null,
                 'phone' => $request->phone ?? null,
                 'status' => 0,
+                'share_code' => strtoupper(Str::random(10)),
                 'referal_code'=>$request->referal_code ?? null,
                 'platform' => $request->header('X-Platform'), // Get from header
                 'region' => $request->header('X-Region'), // Get from header

@@ -20,6 +20,7 @@ class User extends Authenticatable
         'auth_type',
         'auth_id',
         'match_maker_id',
+        'share_code',
         'app_version',
         'status',
         'onboarding_status',
@@ -66,7 +67,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfileAvg::class);
     }
-    
+
     public function clientProfileCard($matchPercentage = null, $requestingUserId = null)
     {
         $matchRequestData = null;

@@ -136,8 +136,9 @@ class PaymentController extends Controller
                     $validator->errors()->toArray()
                 );
             }
+            $userPayment = UserPayment::with('user')->find($request->payment_id);
+
             if ($request->status === 1) {
-                $userPayment = UserPayment::with('user')->find($request->payment_id);
                 $paymentAmount = $userPayment->amount;
 
                 if (!empty($userPayment->user->referal_code)) {
@@ -194,11 +195,13 @@ class PaymentController extends Controller
                 // Log the transaction or update payment status
                 $userPayment->update(['status' =>$request->status]);
             }
-
+            elseif($request->status === 2){
+                $userPayment->update(['status' =>$request->status]);
+            }
 
             return $this->apiResponse(
                 $userPayment->fresh(),
-                'Payment created successfully',
+                'Payment Updated successfully',
                 201
             );
 

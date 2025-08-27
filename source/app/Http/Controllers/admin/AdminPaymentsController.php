@@ -10,7 +10,11 @@ class AdminPaymentsController extends Controller
 {
     public function pending()
     {
-        $pending =UserPayment::with('paymentPlan'. 'variations')->where('status', 0)->orderby('id', 'asc')->get();
+        $pending = UserPayment::with(['paymentPlan', 'paymentPlanVariation'])
+            ->where('status', 0)
+            ->orderBy('id', 'asc')
+            ->get();
+//        dd($pending);exit();
        return view('admin.payments.pending', compact('pending'));
 
     }

@@ -24,6 +24,7 @@ return new class extends Migration
 
             $table->foreignId('match_maker_id')->nullable()->constrained('users')->nullOnDelete();
 
+            $table->string('share_code', 10)->unique();
             $table->string('app_version')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('onboarding_status')->default(0);

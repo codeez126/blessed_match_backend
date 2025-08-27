@@ -41,7 +41,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/create-room', [\App\Http\Controllers\API\ChatController::class, 'createRoom']);
     Route::post('/chat-history', [\App\Http\Controllers\API\ChatController::class, 'chatHistory']);
     Route::post('/chat-conversions', [\App\Http\Controllers\API\ChatController::class, 'chatConversions']);
-    Route::post('upload-chat-file', [\App\Http\Controllers\API\ChatController::class, 'uploadChatFile']);
+    Route::post('temp-upload', [\App\Http\Controllers\API\ChatController::class, 'uploadChatFile']);
 
     Route::post('get-countries', [\App\Http\Controllers\API\HomeController::class, 'getCountries']);
     Route::post('get-area/{city_id}', [\App\Http\Controllers\API\HomeController::class, 'getArea']);

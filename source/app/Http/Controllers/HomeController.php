@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -29,6 +30,31 @@ class HomeController extends Controller
         ]);
     }
 
+    public function clientProfile($share_code)
+    {
+        $user = User::with([
+            'clientAbout',
+            'clientFamilyMembers',
+            'clientBackground',
+            'clientBackground.province',
+            'clientBackground.city',
+            'clientBackground.area',
+            'clientFamilyInfo',
+            'clientProfession',
+            'clientProfession.education',
+            'clientProfession.occupation',
+            'userBusinesses',
+            'clientIslamicValue',
+            'clientIslamicValue.religion',
+            'clientIslamicValue.sect',
+            'clientIslamicValue.cast',
+            'clientLifeStyle',
+            'nationalities',
+            'clientLanguages.language',
+            'clientImages',
+        ])->where('share_code', $share_code)->firstOrFail();
+        return view('clientProfile',[$user]);
+    }
     public function signup()
     {
         $headerInfo=\App\Models\HeaderInfo::select('*')->first();

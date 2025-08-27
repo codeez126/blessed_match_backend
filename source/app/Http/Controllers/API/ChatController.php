@@ -117,7 +117,7 @@ class ChatController extends Controller
             'data' => $data
         ]);
     }
-    public function uploadTemp(Request $request)
+    public function uploadChatFile(Request $request)
     {
         try {
             $request->validate([
@@ -132,8 +132,11 @@ class ChatController extends Controller
             // file_thumbnail
             $thumbnail = $request->file('file_thumbnail');
             if ($thumbnail) {
-                $thumbnailPathName = 'thumb_' . $uniqId . '.' . $thumbnail->getClientOriginalExtension();
-                $thumbnailPath = $thumbnail->storeAs('temp', $thumbnailPathName, 'public');
+                    $thumbnailPath = 'assets/images/chat/';
+                    $thumbnailFileName = 'thumb_' . $uniqId . '.' . $thumbnail->getClientOriginalExtension();
+                    $thumbnail->move($thumbnailPath, $thumbnailFileName);
+
+                    $thumbnailPath = $thumbnailPath . $thumbnailFileName;
             }
 
             //  file

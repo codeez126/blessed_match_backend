@@ -65,10 +65,11 @@ class UserPayment extends Model
         return $this->belongsTo(PaymentPlan::class, 'type_id');
     }
 
-    public function variation(): BelongsTo
+    public function paymentPlanVariation()
     {
         return $this->belongsTo(PaymentPlanVariation::class, 'variation_id');
     }
+
 
     /**
      * Scope a query to only include plan purchase payments.

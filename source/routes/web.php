@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('adminlogin');
 });
+Route::get('profile/{share_code}', [\App\Http\Controllers\HomeController::class, 'clientProfile']);
 
 /** Super Admin and admins routes **/
 Route::get('admin/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'adminloginform'])
