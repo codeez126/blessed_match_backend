@@ -85,7 +85,14 @@ class User extends Authenticatable
             if ($matchRequest) {
                 $matchRequestData = $matchRequest;
             }
+            // Check for existing chat room between requesting user and this user's match maker
             if ($this->match_maker_id) {
+                \Log::info('Chat Room Debug', [
+                    'requesting_user_id' => $requestingUserId,
+                    'match_maker_id' => $this->match_maker_id,
+                    'user_id' => $this->id
+                ]);
+
                 $chatRoom = \App\Models\ChatRoom::where(function($query) use ($requestingUserId) {
                     $query->where('auth_user_id', $requestingUserId)
                         ->where('receiver_id', $this->match_maker_id);
@@ -93,6 +100,10 @@ class User extends Authenticatable
                     $query->where('receiver_id', $requestingUserId)
                         ->where('auth_user_id', $this->match_maker_id);
                 })->first();
+
+                \Log::info('Chat Room Found', [
+                    'chat_room' => $chatRoom ? $chatRoom->toArray() : 'null'
+                ]);
 
                 $chatRoomId = $chatRoom ? $chatRoom->id : null;
             }
