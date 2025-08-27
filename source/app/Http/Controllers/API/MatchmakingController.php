@@ -429,13 +429,16 @@ class MatchmakingController extends Controller
                 'receivingUser.clientAbout',
                 'receivingMm.mmProfile',
                 'receivingUser.profileAvg'
-                ])
+            ])
                 ->where(function ($q) {
                     $q->where('requesting_mm_id', Auth::id())
-                        ->orWhere('requesting_user_id', Auth::id());
+                        ->orWhere('requesting_user_id', Auth::id())
+                        ->orWhere('receiving_mm_id', Auth::id())
+                        ->orWhere('receiving_user_id', Auth::id());
                 })
                 ->orderBy('id','desc')
                 ->get();
+
         } else {
             $matchRequest = MatchRequest::with([
                 'requestingUser.clientAbout',

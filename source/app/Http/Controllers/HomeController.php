@@ -52,8 +52,12 @@ class HomeController extends Controller
             'nationalities',
             'clientLanguages.language',
             'clientImages',
-        ])->where('share_code', $share_code)->firstOrFail();
-        return view('clientProfile',[$user]);
+        ])->where('share_code', $share_code)->first();
+
+//        dd($user);
+        return view('clientProfile',[
+            'user' => $user,
+        ]);
     }
     public function signup()
     {
