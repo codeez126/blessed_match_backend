@@ -249,6 +249,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserPoint::class, 'user_id');
     }
+    public function chatRoomsAsSender()
+    {
+        return $this->hasMany(ChatRoom::class, 'auth_user_id');
+    }
+
+    public function chatRoomsAsReceiver()
+    {
+        return $this->hasMany(ChatRoom::class, 'receiver_id');
+    }
 
 
 }

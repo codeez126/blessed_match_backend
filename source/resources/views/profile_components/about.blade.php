@@ -1,4 +1,4 @@
-<h4>Personal Details</h4>
+<h4 class="pb-3">Personal Details</h4>
 
 <div class="row">
     <div class="col-md-6 col-12" style="padding: 0 20px">

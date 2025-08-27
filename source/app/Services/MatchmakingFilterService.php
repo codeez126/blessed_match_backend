@@ -154,6 +154,7 @@ class MatchmakingFilterService
             );
         }
 
+
         // Get all users (after hard filters)
         $users = $query->get();
         // Generate user cards with match percentage

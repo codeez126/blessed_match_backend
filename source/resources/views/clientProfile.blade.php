@@ -91,7 +91,7 @@
         font-weight: bold;
     }
     .advanced-info-section{
-        border: 1px solid black;
+        border: 1px solid #e1d2d2;
         padding: 10px;
         border-radius: 5px
     }
@@ -137,21 +137,21 @@
                                 <img src="{{asset('assets/front/icons/tick.webp')}}" alt="" width="30" height="30">
                             </h2>
                         </div>
-                        <div class="col-md-3 col-4 mb-2 mb-md-0">
+                        <div class="col-md-3 col-6 mb-2 mb-md-0">
                             <div class="basic-info-section d-flex align-items-center">
                                 <img src="{{asset('assets/front/icons/cast.webp')}}" alt="" width="30" height="30">
                                 <span>{{ $user->clientIslamicValue?->cast?->name ?? 'N/A' }}</span>
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-4 mb-2 mb-md-0">
+                        <div class="col-md-4 col-6 mb-2 mb-md-0">
                             <div class="basic-info-section d-flex align-items-center">
                                 <img src="{{asset('assets/front/icons/profession.webp')}}" alt="" width="30" height="30">
                                 <span>{{ $user->clientProfession?->occupationRelation?->name ?? 'N/A' }}</span>
                             </div>
                         </div>
 
-                        <div class="col-md-5 col-4 mb-2 mb-md-0">
+                        <div class="col-md-5 col-6 mb-2 mb-md-0">
                             <div class="basic-info-section d-flex align-items-center">
                                 <img src="{{asset('assets/front/icons/location.webp')}}" alt="" width="30" height="30">
                                 <span>{{ $user->clientBackground?->cityRelation->name ?? 'N/A' }}</span>
