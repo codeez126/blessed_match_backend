@@ -85,7 +85,20 @@ class User extends Authenticatable
             if ($matchRequest) {
                 $matchRequestData = $matchRequest;
             }
+            if ($this->match_maker_id) {
+                $chatRoom = \App\Models\ChatRoom::where(function($query) use ($requestingUserId) {
+                    $query->where('auth_user_id', $requestingUserId)
+                        ->where('receiver_id', $this->match_maker_id);
+                })->orWhere(function($query) use ($requestingUserId) {
+                    $query->where('receiver_id', $requestingUserId)
+                        ->where('auth_user_id', $this->match_maker_id);
+                })->first();
+
+                $chatRoomId = $chatRoom ? $chatRoom->id : null;
+            }
         }
+
+
         return [
             'id' => $this->id,
             'status' => $this->status,
@@ -112,6 +125,7 @@ class User extends Authenticatable
             'mm_bussiness_name' => optional($this->mmProfiledetails)->business_name,
             'mm_business_card' => optional($this->mmProfiledetails)->business_card,
             'mm_is_registered' => optional($this->mmProfiledetails)->is_registered,
+            'chat_room_id' => $chatRoomId,
         ];
     }
     public function clientAbout()

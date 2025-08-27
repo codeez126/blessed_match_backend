@@ -149,31 +149,6 @@ class MatchmakingController extends Controller
                     'is_login' => $is_login,
                 ], 'No matches found');
             }
-            $loggedInUserId = $loggedInUser->id;
-
-            if($loggedInUser && $loggedInUserId && !empty($results)){
-                
-                $userIds = $results->pluck('id')->toArray();
-                $filteredUserIds = User::whereIn('id', $userIds)->pluck('match_maker_id')->toArray();
-
-                // Get existing chat rooms between auth user and filtered users
-                $existingChatRooms = \App\Models\ChatRoom::where(function($query) use ($loggedInUserId, $filteredUserIds) {
-                    $query->where('auth_user_id', $loggedInUserId)
-                        ->whereIn('receiver_id', $filteredUserIds);
-                })->orWhere(function($query) use ($loggedInUserId, $filteredUserIds) {
-                    $query->where('receiver_id', $loggedInUserId)
-                        ->whereIn('auth_user_id', $filteredUserIds);
-                })->get()->keyBy(function($chatRoom) use ($loggedInUserId) {
-                    // Create a key based on the other user's ID
-                    return $chatRoom->auth_user_id == $loggedInUserId ? $chatRoom->receiver_id : $chatRoom->auth_user_id;
-                });
-
-                // Add chat_room_id to each card
-                $results->transform(function($card) use ($existingChatRooms) {
-                    $card['chat_room_id'] = $existingChatRooms->has($card['id']) ? $existingChatRooms[$card['id']]->id : null;
-                    return $card;
-                });
-            }
 
             return $this->apiResponse([
                 'cards' => $results->values(),
