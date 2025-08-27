@@ -24,6 +24,7 @@ use App\Models\User;
 use App\Models\UserWishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -41,12 +42,9 @@ class HomeController extends Controller
 
         $perPage = $request->get('per_page', 50);
         $clients = User::where('type', 0)->orderBy('id', 'desc')->paginate($perPage);
-        $loggedInUserId = auth('api')->id();
-//        $cards = $clients->map(function ($client) {
-//            return $client->clientProfileCard(); // Call the method properly
-//        });
-        $cards = $clients->map(function ($client) use ($loggedInUserId) {
-            return $client->clientProfileCard($loggedInUserId);
+        $cards = $clients->map(function ($client) {
+            Log::info('furqan data is'.$client);
+            return $client->clientProfileCard();
         });
         return $this->apiResponse([
             'cards' => $cards,

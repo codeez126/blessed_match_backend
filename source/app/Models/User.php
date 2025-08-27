@@ -72,31 +72,7 @@ class User extends Authenticatable
     {
         $matchRequestData = null;
         $chatRoomId = null;
-        if ($requestingUserId) {
-            // Check if there's an existing match request between these users
-            $matchRequest = MatchRequest::where(function ($query) use ($requestingUserId) {
-                $query->where('requesting_user_id', $requestingUserId)
-                    ->where('receiving_user_id', $this->id);
-            })->orWhere(function ($query) use ($requestingUserId) {
-                $query->where('requesting_user_id', $this->id)
-                    ->where('receiving_user_id', $requestingUserId);
-            })->first();
 
-            if ($matchRequest) {
-                $matchRequestData = $matchRequest;
-            }
-            if ($this->match_maker_id) {
-                $chatRoom = \App\Models\ChatRoom::where(function($query) use ($requestingUserId) {
-                    $query->where('auth_user_id', $requestingUserId)
-                        ->where('receiver_id', $this->match_maker_id);
-                })->orWhere(function($query) use ($requestingUserId) {
-                    $query->where('receiver_id', $requestingUserId)
-                        ->where('auth_user_id', $this->match_maker_id);
-                })->first();
-
-                $chatRoomId = $chatRoom ? $chatRoom->id : null;
-            }
-        }
 
 
         return [
