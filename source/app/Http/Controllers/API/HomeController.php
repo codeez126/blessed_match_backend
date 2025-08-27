@@ -31,8 +31,8 @@ class HomeController extends Controller
 {
     public function simpleHome(Request $request)
     {
-
         $loggedInUser = User::with('deviceToken')->find(auth('api')->id());
+
         if ($loggedInUser) {
             $deviceToken = optional($loggedInUser->deviceToken)->device_token;
             $is_login = true;
@@ -43,22 +43,28 @@ class HomeController extends Controller
 
         $perPage = $request->get('per_page', 50);
         $clients = User::where('type', 0)->orderBy('id', 'desc')->paginate($perPage);
+
         $cards = $clients->map(function ($client) use ($loggedInUser) {
             $cardMM = $client->match_maker_id;
-            $chatRoom = ChatRoom::where(function($query) use ($cardMM, $loggedInUser) {
-                $query->where('auth_user_id', $cardMM)
-                    ->where('receiver_id', $loggedInUser->id);
-            })
-                ->orWhere(function($query) use ($cardMM, $loggedInUser) {
-                    $query->where('receiver_id', $cardMM)
-                        ->where('auth_user_id', $loggedInUser->id);
+
+            if ($loggedInUser) {
+                $chatRoom = ChatRoom::where(function ($query) use ($cardMM, $loggedInUser) {
+                    $query->where('auth_user_id', $cardMM)
+                        ->where('receiver_id', $loggedInUser->id);
                 })
-                ->first();
+                    ->orWhere(function ($query) use ($cardMM, $loggedInUser) {
+                        $query->where('receiver_id', $cardMM)
+                            ->where('auth_user_id', $loggedInUser->id);
+                    })
+                    ->first();
+            } else {
+                $chatRoom = null;
+            }
 
-            $card = $client->clientProfileCard();
-            $card['chat_room_id'] = $chatRoom ? $chatRoom->id : null;
-
-            return $card;
+            return array_merge(
+                $client->clientProfileCard(),
+                ['chat_room' => $chatRoom]
+            );
         });
 
         return $this->apiResponse([
@@ -69,8 +75,8 @@ class HomeController extends Controller
                 'current_page' => $clients->currentPage(),
                 'next_page_url' => $clients->nextPageUrl(),
             ],
-             'device_token' => $deviceToken,
-             'is_login' => $is_login,
+            'device_token' => $deviceToken,
+            'is_login' => $is_login,
         ], 'Cards get successfully');
     }
 
