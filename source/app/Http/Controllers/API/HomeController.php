@@ -48,7 +48,10 @@ class HomeController extends Controller
         // Add chat room integration
         if($loggedInUser && !empty($cards)){
             $loggedInUserId = $loggedInUser->id;
-            $filteredUserIds = $cards->pluck('match_maker_id')->toArray();
+
+            $userIds = $cards->pluck('id')->toArray();
+            $filteredUserIds = User::whereIn('id', $userIds)->pluck('match_maker_id')->toArray();
+
 
             // Get existing chat rooms between auth user and filtered users
             $existingChatRooms = \App\Models\ChatRoom::where(function($query) use ($loggedInUserId, $filteredUserIds) {
