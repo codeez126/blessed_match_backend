@@ -45,16 +45,17 @@ class HomeController extends Controller
         $clients = User::where('type', 0)->orderBy('id', 'desc')->paginate($perPage);
         $cards = $clients->map(function ($client) use ($loggedInUser) {
             $cardMM = $client->match_maker_id;
-            $chatRoom = ChatRoom::where(function($query) use ($cardMM, $loggedInUser) {
-                $query->where('auth_user_id', $cardMM)
-                    ->where('receiver_id', $loggedInUser->id);
-            })
-                ->orWhere(function($query) use ($cardMM, $loggedInUser) {
-                    $query->where('receiver_id', $cardMM)
-                        ->where('auth_user_id', $loggedInUser->id);
+            if ($loggedInUser && $cardMM) {
+                $chatRoom = ChatRoom::where(function ($query) use ($cardMM, $loggedInUser) {
+                    $query->where('auth_user_id', $cardMM)
+                        ->where('receiver_id', $loggedInUser->id);
                 })
-                ->first();
-
+                    ->orWhere(function ($query) use ($cardMM, $loggedInUser) {
+                        $query->where('receiver_id', $cardMM)
+                            ->where('auth_user_id', $loggedInUser->id);
+                    })
+                    ->first();
+            }
             $card = $client->clientProfileCard();
             $card['chat_room_id'] = $chatRoom ? $chatRoom->id : null;
 
