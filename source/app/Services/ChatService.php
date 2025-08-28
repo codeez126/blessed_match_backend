@@ -214,7 +214,7 @@ class ChatService
             ->withCount(['unreadChatMessages' => function ($query) use ($user) {
                 $query->where('receiver_id', $user->id);
             }])
-            ->with(['receiver', 'sender', 'lastMessageForApi'])
+            ->with(['senderWithProfile', 'receiverWithProfile', 'lastMessageForApi'])
             ->withMax('chatMessages', 'created_at')
             ->orderByDesc('chat_messages_max_created_at')
             ->get();

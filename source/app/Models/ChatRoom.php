@@ -50,4 +50,24 @@ class ChatRoom extends Model
     {
         return $this->belongsTo(User::class, 'auth_user_id');
     }
+    public function senderWithProfile()
+    {
+        return $this->belongsTo(User::class, 'auth_user_id')
+            ->with(['mmProfile' => function ($q) {
+                $q->when($this->sender->type == 1, fn($query) => $query);
+            }, 'clientAbout' => function ($q) {
+                $q->when($this->sender->type == 0, fn($query) => $query);
+            }]);
+    }
+
+    public function receiverWithProfile()
+    {
+        return $this->belongsTo(User::class, 'receiver_id')
+            ->with(['mmProfile' => function ($q) {
+                $q->when($this->receiver->type == 1, fn($query) => $query);
+            }, 'clientAbout' => function ($q) {
+                $q->when($this->receiver->type == 0, fn($query) => $query);
+            }]);
+    }
+
 }
