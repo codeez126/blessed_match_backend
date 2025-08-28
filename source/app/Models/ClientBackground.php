@@ -37,6 +37,10 @@ class ClientBackground extends Model
     {
         return $this->belongsTo(Province::class, 'province');
     }
+    public function provinceRelation()
+    {
+        return $this->belongsTo(Province::class, 'province');
+    }
 
     public function city()
     {
@@ -48,6 +52,10 @@ class ClientBackground extends Model
         return $this->belongsTo(City::class, 'city');
     }
     public function area()
+    {
+        return $this->belongsTo(Area::class, 'area');
+    }
+    public function areaRelation()
     {
         return $this->belongsTo(Area::class, 'area');
     }

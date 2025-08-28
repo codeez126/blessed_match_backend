@@ -27,4 +27,8 @@ class ClientFamilyMember extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function maritalStatus()
+    {
+        return $this->belongsTo(MaritalStatus::class, 'martial_status');
+    }
 }

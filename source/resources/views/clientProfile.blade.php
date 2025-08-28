@@ -95,6 +95,22 @@
         padding: 10px;
         border-radius: 5px
     }
+    .theme-card-points{
+        padding: 0 20px;
+        margin-bottom: 20px;
+    }
+    .repeating-heading {
+        display: inline-block;
+        position: relative;
+        background: linear-gradient(135deg, #8C37F8, #D51BF9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        padding-bottom: 8px;
+        margin-left: 15px;
+    }
+
     @media (max-width: 768px) {
         .profile-image {
             width: 100px;
@@ -337,20 +353,17 @@
             </div>
             <div class="tab-pane fade" id="pane-2">
                 <div class="p-3">
-                    <h5>Content for Tab 2</h5>
-                    <p>This is the content for the second tab.</p>
+                    @include('profile_components.background')
                 </div>
             </div>
             <div class="tab-pane fade" id="pane-3">
                 <div class="p-3">
-                    <h5>Content for Tab 3</h5>
-                    <p>This is the content for the third tab.</p>
+                    @include('profile_components.profession')
                 </div>
             </div>
             <div class="tab-pane fade" id="pane-4">
                 <div class="p-3">
-                    <h5>Content for Tab 4</h5>
-                    <p>This is the content for the fourth tab.</p>
+                    @include('profile_components.islamic_values')
                 </div>
             </div>
             <div class="tab-pane fade" id="pane-5">

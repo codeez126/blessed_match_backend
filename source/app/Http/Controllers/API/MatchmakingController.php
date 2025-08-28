@@ -210,44 +210,43 @@ class MatchmakingController extends Controller
                 'per_page' => $request->per_page ?? 50,
             ];
 
-// Conditionally add fields only when they're not null
-            if ($user->clientAbout->marital_status_id) {
+            if ($user->clientAbout && $user->clientAbout->marital_status_id) {
                 $requestData['marital_status_id'] = [$user->clientAbout->marital_status_id];
             }
 
-            if ($user->clientBackground->house_status_id) {
+            if ($user->clientBackground && $user->clientBackground->house_status_id) {
                 $requestData['house_status_id'] = $user->clientBackground->house_status_id;
             }
 
-            if ($user->clientBackground->city_id) {
+            if ($user->clientBackground && $user->clientBackground->city_id) {
                 $requestData['city_id'] = [$user->clientBackground->city_id];
             }
 
-            if ($user->clientProfession->education_id) {
+            if ($user->clientProfession && $user->clientProfession->education_id) {
                 $requestData['education_id'] = [$user->clientProfession->education_id];
             }
 
-            if ($user->clientProfession->employment_status_id) {
+            if ($user->clientProfession && $user->clientProfession->employment_status_id) {
                 $requestData['employment_status_id'] = [$user->clientProfession->employment_status_id];
             }
 
-            if ($user->clientProfession->occupations) {
+            if ($user->clientProfession && $user->clientProfession->occupations) {
                 $requestData['occupations'] = [$user->clientProfession->occupations];
             }
 
-            if ($user->clientIslamicValue->religion_id) {
+            if ($user->clientIslamicValue && $user->clientIslamicValue->religion_id) {
                 $requestData['religion_id'] = $user->clientIslamicValue->religion_id;
             }
 
-            if ($user->clientIslamicValue->sect_id) {
+            if ($user->clientIslamicValue && $user->clientIslamicValue->sect_id) {
                 $requestData['sect_id'] = [$user->clientIslamicValue->sect_id];
             }
 
-            if ($user->clientIslamicValue->cast_id) {
+            if ($user->clientIslamicValue && $user->clientIslamicValue->cast_id) {
                 $requestData['cast_id'] = [$user->clientIslamicValue->cast_id];
             }
 
-            if ($user->nationalities->isNotEmpty()) {
+            if ($user->nationalities && $user->nationalities->isNotEmpty()) {
                 $requestData['nationalities'] = $user->nationalities->pluck('id')->toArray();
             }
 
@@ -285,7 +284,6 @@ class MatchmakingController extends Controller
                     }
                 }
             }
-//            dd($filterRequest);exit();
             // Call findMatches with the prepared request
             \Log::info('Filter Request Data Before findMatches', ['all_data' => $filterRequest->all()]);
             return $this->findMatches($filterRequest);

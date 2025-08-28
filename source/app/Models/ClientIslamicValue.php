@@ -44,4 +44,5 @@ class ClientIslamicValue extends Model
         return $this->belongsTo(Cast::class, 'cast_id');
     }
 
+
 }
