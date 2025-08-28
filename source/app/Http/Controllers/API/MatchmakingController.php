@@ -434,7 +434,6 @@ class MatchmakingController extends Controller
                         ->orWhere('receiving_mm_id', Auth::id())
                         ->orWhere('receiving_user_id', Auth::id());
                 })
-                ->whereNotIn('status', [3, 4])
                 ->orderBy('id','desc')
                 ->get();
 
@@ -454,7 +453,6 @@ class MatchmakingController extends Controller
                 ->orderBy('id','desc')
                 ->get();
         }
-
         return response()->json([
             'success' => true,
             'message' => 'Match requests fetched',
