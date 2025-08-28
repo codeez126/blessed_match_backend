@@ -210,14 +210,16 @@ class ChatService
             ->where(function ($query) use ($user) {
                 $query->where('auth_user_id', $user->id)
                     ->orWhere('receiver_id', $user->id);
-            })->withCount(['unreadChatMessages' => function ($query) use ($user) {
+            })
+            ->withCount(['unreadChatMessages' => function ($query) use ($user) {
                 $query->where('receiver_id', $user->id);
             }])
-            ->with(['receiver', 'sender', 'lastMessage'])
+            ->with(['receiver', 'sender', 'lastMessageForApi'])
             ->withMax('chatMessages', 'created_at')
             ->orderByDesc('chat_messages_max_created_at')
             ->get();
     }
+
 
     public function deleteMessage(mixed $data, Client $mqtt)
     {

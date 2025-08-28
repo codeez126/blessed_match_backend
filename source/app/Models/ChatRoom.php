@@ -34,6 +34,13 @@ class ChatRoom extends Model
     {
         return $this->hasOne(ChatMessage::class, 'chat_room_id')->latest()->limit(1)->with(['sender', 'receiver']);
     }
+    public function lastMessageForApi()
+    {
+        return $this->hasOne(ChatMessage::class, 'chat_room_id')
+            ->ofMany('created_at', 'max')
+            ->with(['sender', 'receiver']);
+    }
+
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id');
