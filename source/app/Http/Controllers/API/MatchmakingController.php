@@ -74,7 +74,7 @@ class MatchmakingController extends Controller
             $validated = $request->validate([
                 'requestingUserID' => 'sometimes|integer|exists:users,id',
 
-                'gender_id' => 'required',
+                'gender_id' => 'required_without:client_name',
                 'client_name' => 'sometimes|string|min:2|max:100',
 
                 'min_house_size' => 'sometimes|integer|min:1',
