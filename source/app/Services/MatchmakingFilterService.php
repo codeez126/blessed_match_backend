@@ -22,7 +22,7 @@ class MatchmakingFilterService
             'type' => 'search',
             'relation' => 'clientAbout',
             'field' => 'full_name',
-            'calculate' => true
+            'calculate' => false
         ],
         'marital_status_id' => [
             'type' => 'array',
@@ -159,7 +159,11 @@ class MatchmakingFilterService
             $q->where('gender_id', $filters['gender_id'])
             );
         }
-
+        if (isset($filters['client_name']) && !empty($filters['client_name'])) {
+            $query->whereHas('clientAbout', function($q) use ($filters) {
+                $q->where('full_name', 'LIKE', '%' . $filters['client_name'] . '%');
+            });
+        }
 
         // Get all users (after hard filters)
         $users = $query->get();
