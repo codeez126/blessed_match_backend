@@ -75,6 +75,7 @@ class MatchmakingController extends Controller
                 'requestingUserID' => 'sometimes|integer|exists:users,id',
 
                 'gender_id' => 'required',
+                'client_name' => 'sometimes|string|min:2|max:100',
 
                 'min_house_size' => 'sometimes|integer|min:1',
 

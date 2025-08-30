@@ -297,7 +297,12 @@
         margin-top: 1rem !important;
         padding-top: 1rem;
     }
-
+.skin-color-span{
+    width: 30px;
+    height: 30px;
+    margin-right: 14px;
+    border-radius: 5px;
+}
     @media (max-width: 575px) {
         .scroll-btn {
             width: 42px;
@@ -368,8 +373,7 @@
             </div>
             <div class="tab-pane fade" id="pane-5">
                 <div class="p-3">
-                    <h5>Content for Tab 5</h5>
-                    <p>This is the content for the fifth tab.</p>
+                    @include('profile_components.life_style')
                 </div>
             </div>
             <div class="tab-pane fade" id="pane-6">

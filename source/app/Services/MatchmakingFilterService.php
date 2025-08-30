@@ -18,6 +18,12 @@ class MatchmakingFilterService
             'max_key' => 'max_age',
             'calculate' => true
         ],
+        'client_name' => [
+            'type' => 'search',
+            'relation' => 'clientAbout',
+            'field' => 'full_name',
+            'calculate' => true
+        ],
         'marital_status_id' => [
             'type' => 'array',
             'relation' => 'clientAbout',
@@ -337,7 +343,12 @@ class MatchmakingFilterService
             return $result;
         }
 
+        if ($config['type'] === 'search') {
+            if (empty($value)) return false;
 
+            $fieldValue = optional($user->{$config['relation']})->{$config['field']};
+            return $fieldValue && stripos($fieldValue, $value) !== false;
+        }
         return false;
     }
     protected function paginateResults($collection, $page, $perPage)

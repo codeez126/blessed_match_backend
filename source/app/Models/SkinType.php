@@ -14,4 +14,9 @@ class SkinType extends Model
         'label',
         'color_code',
     ];
+    public function clientLifeStyles()
+    {
+        return $this->hasMany(ClientLifeStyle::class, 'skin_color_id');
+    }
+
 }

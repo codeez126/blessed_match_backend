@@ -48,7 +48,7 @@ class HomeController extends Controller
             'clientIslamicValue.religion',
             'clientIslamicValue.sect',
             'clientIslamicValue.cast',
-            'clientLifeStyle',
+            'clientLifeStyle.skinType',
             'nationalities',
             'clientLanguages.language',
             'clientImages',

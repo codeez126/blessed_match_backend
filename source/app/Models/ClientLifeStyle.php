@@ -31,4 +31,9 @@ class ClientLifeStyle extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function skinType()
+    {
+        return $this->belongsTo(SkinType::class, 'skin_color_id');
+    }
+
 }
