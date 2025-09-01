@@ -237,6 +237,7 @@ class AuthController extends Controller
                         'auth_type' => $request->auth_type,
                         'auth_id' => $request->auth_id,
                         'status' => 1,
+                        'type' => 1,
                     ]);
                 }
 
