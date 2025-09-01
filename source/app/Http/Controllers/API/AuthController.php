@@ -501,6 +501,7 @@ class AuthController extends Controller
                         'auth_type' => 'email',
                         'match_maker_id' => $loginUser->id,
                         'status' => '0',
+                        'share_code' => Str::random(10),
                     ]);
                 }
             }elseif ($loginUser->type == '0'){
