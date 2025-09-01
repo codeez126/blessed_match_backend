@@ -62,8 +62,12 @@ class HomeController extends Controller
 
             return $card;
         });
+        $unReadRoomsCount = ChatRoom::whereHas('unreadChatMessages')->count();
+
+
         return $this->apiResponse([
             'cards' => $cards,
+            'unReadRoomsCount' => $unReadRoomsCount,
             'pagination' => [
                 'per_page' => $clients->perPage(),
                 'total_users' => $clients->total(),
