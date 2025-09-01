@@ -398,7 +398,7 @@ class AuthController extends Controller
 
             return $this->apiResponse([
                 'mm_profile' => $mmProfile
-            ], 'Matchmaker profile Updated successfully');
+            ], 'Your Profile Updated successfully');
 
         } catch (\Exception $e) {
             return $this->apiResponse([], 'Profile creation failed: ' . $e->getMessage(), 500);
