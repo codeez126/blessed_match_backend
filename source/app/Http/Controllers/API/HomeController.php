@@ -32,7 +32,7 @@ class HomeController extends Controller
     public function simpleHome(Request $request)
     {
 
-        $loggedInUser = User::with('deviceToken')->find(auth('api')->id());
+        $loggedInUser = User::with('mmProfile','deviceToken')->find(auth('api')->id());
         if ($loggedInUser) {
             $deviceToken = optional($loggedInUser->deviceToken)->device_token;
             $is_login = true;
@@ -65,6 +65,7 @@ class HomeController extends Controller
         $unReadRoomsCount = ChatRoom::whereHas('unreadChatMessages')->count();
 
 
+
         return $this->apiResponse([
             'cards' => $cards,
             'unReadRoomsCount' => $unReadRoomsCount,
@@ -76,6 +77,7 @@ class HomeController extends Controller
             ],
              'device_token' => $deviceToken,
              'is_login' => $is_login,
+             'loggedInUser' => $loggedInUser ?? null,
         ], 'Cards get successfully');
     }
 
