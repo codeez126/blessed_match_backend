@@ -367,7 +367,7 @@
             </div>
             <div class="tab-pane fade" id="pane-6">
                 <div class="p-3">
-                    @include('profile_components.life_style')
+                    @include('profile_components.hobbies')
                 </div>
             </div>
             <div class="tab-pane fade" id="pane-7">
