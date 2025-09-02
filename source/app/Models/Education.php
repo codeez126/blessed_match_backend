@@ -12,7 +12,7 @@ class Education extends Model
 
     protected $table = 'educations';  // Ensure it's plural
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'level'];
     public function clientProfessions()
     {
         return $this->hasMany(ClientProfession::class);
