@@ -148,7 +148,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="first-container">
-                    Profile
+                    {{$profileTxt}}
                 </div>
             </div>
         </div>

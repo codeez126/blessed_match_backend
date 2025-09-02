@@ -54,7 +54,15 @@ class HomeController extends Controller
             'clientImages',
             'clientHobbies',
             'profileAvg',
+            'matchMaker',
         ])->where('share_code', $share_code)->first();
+
+        if ($user->match_maker_id){
+            $profileTxt = 'Profile Managed by '.$user->matchMaker->mmProfile->business_name;
+        }else{
+            $profileTxt = 'Profile';
+        }
+
 
         if ($user->clientAbout->profile_image){
             $profile_Image = $user->clientAbout->profile_image;
@@ -79,6 +87,7 @@ class HomeController extends Controller
             'user' => $user,
             'profile_Image' => $profile_Image,
             'description' => $description,
+            'profileTxt' => $profileTxt,
         ]);
     }
     public function signup()
