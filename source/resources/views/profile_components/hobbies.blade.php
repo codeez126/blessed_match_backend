@@ -3,7 +3,9 @@
 <div class="row">
     <div class="col-md-12">
         @foreach($user->clientHobbies as $hobbies)
-        <span class="badge rounded-pill" style="background-color: {{$hobbies->color}}; color: white">{{$hobbies->emoji . ' '. $hobbies->name}}</span>
+        <span class="badge rounded-pill" style="background-color: {{$hobbies->color}}; color: white;padding: 14px 17px;">
+            {{$hobbies->emoji . ' '. $hobbies->name}}
+        </span>
         @endforeach
     </div>
 </div>
