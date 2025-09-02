@@ -136,7 +136,16 @@
         .basic-info-container {
             text-align: center;
         }
-
+        .progress {
+            margin: 10px 5px;
+        }
+        .profile-completed-div {
+            margin: 0px 11px;
+        }
+        .theme-card-points {
+            padding: 0px;
+            margin-bottom: 8px;
+        }
     }
 </style>
 
