@@ -79,6 +79,8 @@ class HomeController extends Controller
 //        dd($user->clientProfession);exit();
         return view('clientProfile',[
             'user' => $user,
+            'profile_Image' => $profile_Image,
+            'description' => $description,
         ]);
     }
     public function signup()
