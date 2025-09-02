@@ -159,9 +159,7 @@
                 <!-- Profile Image Column -->
                 <div class="col-md-3 col-12 text-center mb-3 mb-md-0">
                     <div class="profile-image">
-                        <img src="
-                        {{asset($user->clientAbout->profile_image ?? 'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg')}}
-                        " alt="Profile Image" class="img-fluid">
+                        <img src="{{asset($profile_Image)}}" alt="Profile Image" class="img-fluid">
                     </div>
                 </div>
                 <!-- Profile Information Column -->
