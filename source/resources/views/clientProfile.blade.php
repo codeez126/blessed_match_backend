@@ -142,7 +142,9 @@
                 <!-- Profile Image Column -->
                 <div class="col-md-3 col-12 text-center mb-3 mb-md-0">
                     <div class="profile-image">
-                        <img src="https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg" alt="Profile Image" class="img-fluid">
+                        <img src="
+                        {{asset($user->clientAbout->profile_image ?? 'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg')}}
+                        " alt="Profile Image" class="img-fluid">
                     </div>
                 </div>
                 <!-- Profile Information Column -->
@@ -328,19 +330,6 @@
                 <a class="nav-link" id="tab-5" data-bs-toggle="tab" href="#pane-5" role="tab">Life Style</a>
                 <a class="nav-link" id="tab-6" data-bs-toggle="tab" href="#pane-6" role="tab">Hobbies</a>
                 <a class="nav-link" id="tab-7" data-bs-toggle="tab" href="#pane-7" role="tab">Gallery</a>
-                <a class="nav-link" id="tab-8" data-bs-toggle="tab" href="#pane-8" role="tab">Profes</a>
-                <a class="nav-link" id="tab-9" data-bs-toggle="tab" href="#pane-9" role="tab">Tab 9</a>
-                <a class="nav-link" id="tab-10" data-bs-toggle="tab" href="#pane-10" role="tab">Tab 10</a>
-                <a class="nav-link" id="tab-11" data-bs-toggle="tab" href="#pane-11" role="tab">Tab 11</a>
-                <a class="nav-link" id="tab-12" data-bs-toggle="tab" href="#pane-12" role="tab">Tab 12</a>
-                <a class="nav-link" id="tab-13" data-bs-toggle="tab" href="#pane-13" role="tab">Tab 13</a>
-                <a class="nav-link" id="tab-14" data-bs-toggle="tab" href="#pane-14" role="tab">Tab 14</a>
-                <a class="nav-link" id="tab-15" data-bs-toggle="tab" href="#pane-15" role="tab">Tab 15</a>
-                <a class="nav-link" id="tab-16" data-bs-toggle="tab" href="#pane-16" role="tab">Tab 16</a>
-                <a class="nav-link" id="tab-17" data-bs-toggle="tab" href="#pane-17" role="tab">Tab 17</a>
-                <a class="nav-link" id="tab-18" data-bs-toggle="tab" href="#pane-18" role="tab">Tab 18</a>
-                <a class="nav-link" id="tab-19" data-bs-toggle="tab" href="#pane-19" role="tab">Tab 19</a>
-                <a class="nav-link" id="tab-20" data-bs-toggle="tab" href="#pane-20" role="tab">Tab 20</a>
             </div>
 
             <button class="scroll-btn" id="tabsScrollRight" aria-label="Scroll right">
@@ -378,94 +367,15 @@
             </div>
             <div class="tab-pane fade" id="pane-6">
                 <div class="p-3">
-                    <h5>Content for Tab 6</h5>
-                    <p>This is the content for the sixth tab.</p>
+                    @include('profile_components.life_style')
                 </div>
             </div>
             <div class="tab-pane fade" id="pane-7">
                 <div class="p-3">
-                    <h5>Content for Tab 7</h5>
-                    <p>This is the content for the seventh tab.</p>
+                    @include('profile_components.gallery')
                 </div>
             </div>
-            <div class="tab-pane fade" id="pane-8">
-                <div class="p-3">
-                    <h5>Content for Tab 8</h5>
-                    <p>This is the content for the eighth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-9">
-                <div class="p-3">
-                    <h5>Content for Tab 9</h5>
-                    <p>This is the content for the ninth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-10">
-                <div class="p-3">
-                    <h5>Content for Tab 10</h5>
-                    <p>This is the content for the tenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-11">
-                <div class="p-3">
-                    <h5>Content for Tab 11</h5>
-                    <p>This is the content for the eleventh tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-12">
-                <div class="p-3">
-                    <h5>Content for Tab 12</h5>
-                    <p>This is the content for the twelfth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-13">
-                <div class="p-3">
-                    <h5>Content for Tab 13</h5>
-                    <p>This is the content for the thirteenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-14">
-                <div class="p-3">
-                    <h5>Content for Tab 14</h5>
-                    <p>This is the content for the fourteenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-15">
-                <div class="p-3">
-                    <h5>Content for Tab 15</h5>
-                    <p>This is the content for the fifteenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-16">
-                <div class="p-3">
-                    <h5>Content for Tab 16</h5>
-                    <p>This is the content for the sixteenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-17">
-                <div class="p-3">
-                    <h5>Content for Tab 17</h5>
-                    <p>This is the content for the seventeenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-18">
-                <div class="p-3">
-                    <h5>Content for Tab 18</h5>
-                    <p>This is the content for the eighteenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-19">
-                <div class="p-3">
-                    <h5>Content for Tab 19</h5>
-                    <p>This is the content for the nineteenth tab.</p>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pane-20">
-                <div class="p-3">
-                    <h5>Content for Tab 20</h5>
-                    <p>This is the content for the twentieth tab. You made it to the end!</p>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
