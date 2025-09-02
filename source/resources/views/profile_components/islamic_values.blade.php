@@ -43,7 +43,7 @@
             <div class="flex-grow-1">
                 <div class="adv-p">Quran Memorization</div>
                 <div class="adv-heading">
-                    {{ $user->clientProfession->quran_memorization === 1 ? 'Yes' : 'No' }}{{$user->clientProfession->quran_memorization}}
+                    {{ $user->clientIslamicValue->quran_memorization === 1 ? 'Yes' : 'No' }}
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
             <div class="flex-grow-1">
                 <div class="adv-p">Prayer Frequency</div>
                 <div class="adv-heading">
-                    {{ $user->clientProfession->prayer_frequency == 1 ? 'Always' : ($user->clientProfession->prayer_frequency == 2 ? 'Sometimes' : ($user->clientProfession->prayer_frequency == 3 ? 'Rarely' : 'N/A')) }}
+                    {{ $user->clientIslamicValue->prayer_frequency == 1 ? 'Always' : ($user->clientProfession->prayer_frequency == 2 ? 'Sometimes' : ($user->clientProfession->prayer_frequency == 3 ? 'Rarely' : 'N/A')) }}
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
             <div class="flex-grow-1">
                     <div class="adv-p">Have Beard</div>
                     <div class="adv-heading">
-                        {{ $user->clientProfession->is_have_beared == 1 ? 'Yes' : 'No' }}
+                        {{ $user->clientIslamicValue->is_have_beared == 1 ? 'Yes' : 'No' }}
                     </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
             <div class="flex-grow-1">
                 <div class="adv-p">Were Niqab</div>
                 <div class="adv-heading">
-                    {{ $user->clientProfession->is_where_nikab == 1 ? 'Yes' : 'No' }}
+                    {{ $user->clientIslamicValue->is_where_nikab == 1 ? 'Yes' : 'No' }}
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@
             <div class="flex-grow-1">
                 <div class="adv-p">Were Hijab</div>
                 <div class="adv-heading">
-                    {{ $user->clientProfession->is_where_hijab == 1 ? 'Yes' : 'No' }}
+                    {{ $user->clientIslamicValue->is_where_hijab == 1 ? 'Yes' : 'No' }}
                 </div>
             </div>
         </div>
