@@ -26,6 +26,7 @@ Route::post('app-privacy', [\App\Http\Controllers\API\HomeController::class, 'ap
 Route::post('app-terms', [\App\Http\Controllers\API\HomeController::class, 'appterms']);
 
 Route::post('home', [\App\Http\Controllers\API\HomeController::class, 'simpleHome']);
+Route::post('send-notification', [\App\Http\Controllers\API\HomeController::class, 'sendNotification']);
 Route::post('start-up', [\App\Http\Controllers\API\HomeController::class, 'startUp']);
 
 

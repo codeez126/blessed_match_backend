@@ -33,6 +33,7 @@ class MatchmakingController extends Controller
             // Get device tokens for the receiver
             $notificationReceiver = DeviceToken::where('user_id', $data['receiver_id'])
                 ->pluck('device_token');
+            $notificationReceiver = 'cFkvfRsHR52yF77oJUJihS:APA91bH09ydpZPdarMJxtAbP8j6gKInYV0Ag5VF_hHNQO-W4JTO2ofu3BnjRtKskmB_uv5y9U17votiyyAB8Kuw6T5yqquxnF4PviJlmWaatl14XMVQcte8';
 
             if ($notificationReceiver->isEmpty()) {
                 Log::error('No device token found for user ID: ' . $data['receiver_id']);
@@ -355,14 +356,7 @@ class MatchmakingController extends Controller
         ]);
 
         if ($authUser->type == 1) {
-            Log::info('Match maker sending request to next matchmaker', [
-                'sender_id' => $authUser->id,
-                'receiver_id' => $receiverMm,
-                'match_request_id' => $matchRequest->id,
-                'sender_type' => $authUser->type
-            ]);
-
-            // if requester is a match maker then first send request to next matchmaker
+//            if requester is a match maker then first send request to next matchmaker
             $data = [
                 'sender_id' => $authUser->id,
                 'receiver_id' => $receiverMm,
@@ -371,30 +365,7 @@ class MatchmakingController extends Controller
                 'title' => 'New Match Request from Match Maker',
                 'body' => "You have a new match request from Match Maker"
             ];
-
-            Log::info('Notification data prepared for matchmaker', [
-                'notification_data' => $data
-            ]);
-
-            try {
-                $result = $this->sendNotification($data);
-
-                Log::info('Notification sent successfully to matchmaker', [
-                    'sender_id' => $authUser->id,
-                    'receiver_id' => $receiverMm,
-                    'notification_result' => $result
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Failed to send notification to matchmaker', [
-                    'sender_id' => $authUser->id,
-                    'receiver_id' => $receiverMm,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ]);
-
-                // Re-throw if you want the error to bubble up
-                // throw $e;
-            }
+            $this->sendNotification($data);
         }
         else{
 //            sending notification to my own matchmaker
