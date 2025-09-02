@@ -43,7 +43,7 @@
             <div class="flex-grow-1">
                 <div class="adv-p">Quran Memorization</div>
                 <div class="adv-heading">
-                    {{ $user->clientProfession->quran_memorization === 1 ? 'Yes' : 'No' }}
+                    {{ $user->clientProfession->quran_memorization === 1 ? 'Yes' : 'No' }}{{$user->clientProfession->quran_memorization}}
                 </div>
             </div>
         </div>
