@@ -27,7 +27,7 @@ class MatchmakingController extends Controller
         $this->firebaseService = $firebaseService;
     }
 
-    private function sendNotification(array $data)
+    public function sendNotification(array $data)
     {
         try {
             // Get device tokens for the receiver
