@@ -77,42 +77,42 @@
                     <tbody>
                     @if(!empty($sibling->full_name))
                         <tr>
-                            <td style="width:40%;"><strong>Name</strong></td>
+                            <td style="width:40%;border-right: 1px solid #a52ef9;"><strong>Name</strong></td>
                             <td>{{ $sibling->full_name }}</td>
                         </tr>
                     @endif
 
                     @if(!empty($sibling->age))
                         <tr>
-                            <td style="background:#fde9fb;"><strong>Age</strong></td>
+                            <td style="border-right: 1px solid #a52ef9;"><strong>Age</strong></td>
                             <td>{{ $sibling->age }}</td>
                         </tr>
                     @endif
 
                     @if(!empty($sibling->gender_id))
                         <tr>
-                            <td style="background:#fde9fb;"><strong>Gender</strong></td>
+                            <td style="border-right: 1px solid #a52ef9;"><strong>Gender</strong></td>
                             <td>{{ $sibling->gender_id == 1 ? 'Male' : ($sibling->gender_id == 2 ? 'Female' : 'N/A') }}</td>
                         </tr>
                     @endif
 
                     @if(!empty($sibling->maritalStatus?->name))
                         <tr>
-                            <td style="background:#fde9fb;"><strong>Marital Status</strong></td>
+                            <td style="border-right: 1px solid #a52ef9;"><strong>Marital Status</strong></td>
                             <td>{{ $sibling->maritalStatus->name }}</td>
                         </tr>
                     @endif
 
                     @if(!empty($sibling->designation))
                         <tr>
-                            <td style="background:#fde9fb;"><strong>Designation</strong></td>
+                            <td style="border-right: 1px solid #a52ef9;"><strong>Designation</strong></td>
                             <td>{{ $sibling->designation }}</td>
                         </tr>
                     @endif
 
                     @if(!empty($sibling->description))
                         <tr>
-                            <td style="background:#fde9fb;"><strong>Description</strong></td>
+                            <td style="border-right: 1px solid #a52ef9;"><strong>Description</strong></td>
                             <td>{{ $sibling->description }}</td>
                         </tr>
                     @endif
