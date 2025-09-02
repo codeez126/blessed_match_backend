@@ -57,9 +57,7 @@ class HomeController extends Controller
         ])->where('share_code', $share_code)->first();
 
         if ($user->clientAbout->profile_image){
-//            $profile_Image = $user->clientAbout->profile_image;
-            $profile_Image = 'assets/front/icons/male.png';
-
+            $profile_Image = $user->clientAbout->profile_image;
         }
         elseif ($user->clientAbout->gender == 1){
             $profile_Image = 'assets/front/icons/male.png';
