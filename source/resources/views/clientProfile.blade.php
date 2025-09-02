@@ -180,9 +180,9 @@
                 </div>
 
                 <div class="col-md-12">
-                    <div class="text-end profile-completed-div">Profile Completed 70%</div>
+                    <div class="text-end profile-completed-div">Profile Completed {{$user->profileAvg->total_avg}}%</div>
                     <div class="progress" style="height: 20px;">
-                        <div class="progress-bar custom-progress" role="progressbar" style="width: 90%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar custom-progress" role="progressbar" style="width: 90%;" aria-valuenow="{{$user->profileAvg->total_avg}}" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
                 </div>
