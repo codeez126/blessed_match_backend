@@ -355,7 +355,14 @@ class MatchmakingController extends Controller
         ]);
 
         if ($authUser->type == 1) {
-//            if requester is a match maker then first send request to next matchmaker
+            Log::info('Match maker sending request to next matchmaker', [
+                'sender_id' => $authUser->id,
+                'receiver_id' => $receiverMm,
+                'match_request_id' => $matchRequest->id,
+                'sender_type' => $authUser->type
+            ]);
+
+            // if requester is a match maker then first send request to next matchmaker
             $data = [
                 'sender_id' => $authUser->id,
                 'receiver_id' => $receiverMm,
@@ -364,7 +371,30 @@ class MatchmakingController extends Controller
                 'title' => 'New Match Request from Match Maker',
                 'body' => "You have a new match request from Match Maker"
             ];
-            $this->sendNotification($data);
+
+            Log::info('Notification data prepared for matchmaker', [
+                'notification_data' => $data
+            ]);
+
+            try {
+                $result = $this->sendNotification($data);
+
+                Log::info('Notification sent successfully to matchmaker', [
+                    'sender_id' => $authUser->id,
+                    'receiver_id' => $receiverMm,
+                    'notification_result' => $result
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send notification to matchmaker', [
+                    'sender_id' => $authUser->id,
+                    'receiver_id' => $receiverMm,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+
+                // Re-throw if you want the error to bubble up
+                // throw $e;
+            }
         }
         else{
 //            sending notification to my own matchmaker

@@ -148,9 +148,6 @@
         }
     }
 </style>
-
-
-
 <div class="container">
     <div class="profile-card">
         <!-- Header Section -->
