@@ -56,6 +56,26 @@ class HomeController extends Controller
             'profileAvg',
         ])->where('share_code', $share_code)->first();
 
+        if ($user->clientAbout->profile_image){
+//            $profile_Image = $user->clientAbout->profile_image;
+            $profile_Image = 'assets/front/icons/male.png';
+
+        }
+        elseif ($user->clientAbout->gender == 1){
+            $profile_Image = 'assets/front/icons/male.png';
+        }else{
+            $profile_Image = 'assets/front/icons/female.png';
+        }
+
+        $description = '';
+
+        if ($user->clientAbout && $user->clientAbout->full_name) {
+            $description .= 'Name: ' . $user->clientAbout->full_name . "\n";
+        }
+        if ($user->clientAbout && $user->clientAbout->dob) {
+            $description .= 'Age: ' . \Carbon\Carbon::parse($user->clientAbout->dob)->age . "\n";
+        }
+
 //        dd($user->clientProfession);exit();
         return view('clientProfile',[
             'user' => $user,
