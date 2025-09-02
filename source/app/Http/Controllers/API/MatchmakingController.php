@@ -27,48 +27,96 @@ class MatchmakingController extends Controller
         $this->firebaseService = $firebaseService;
     }
 
-    public function sendNotification(array $data)
+    private function sendNotification(array $data)
     {
+        Log::info('Starting sendNotification process', [
+            'sender_id' => $data['sender_id'],
+            'receiver_id' => $data['receiver_id'],
+            'notification_type' => $data['type']
+        ]);
+
         try {
             // Get device tokens for the receiver
             $notificationReceiver = DeviceToken::where('user_id', $data['receiver_id'])
                 ->pluck('device_token');
-            $notificationReceiver = 'cFkvfRsHR52yF77oJUJihS:APA91bH09ydpZPdarMJxtAbP8j6gKInYV0Ag5VF_hHNQO-W4JTO2ofu3BnjRtKskmB_uv5y9U17votiyyAB8Kuw6T5yqquxnF4PviJlmWaatl14XMVQcte8';
+
+            Log::info('Device tokens retrieved', [
+                'receiver_id' => $data['receiver_id'],
+                'token_count' => $notificationReceiver->count(),
+                'tokens' => $notificationReceiver->toArray() // This will help debug invalid tokens
+            ]);
 
             if ($notificationReceiver->isEmpty()) {
                 Log::error('No device token found for user ID: ' . $data['receiver_id']);
                 return false;
             }
 
-            $payload =[
+            $payload = [
                 'type' => $data['type'],
                 'type_id' => $data['type_id'],
                 'status' => 0,
                 'sender_id' => $data['sender_id'],
                 'receiving_user_id' => $data['receiver_id']
             ];
+
+            Log::info('Payload prepared for notification', [
+                'payload' => $payload
+            ]);
+
             // Send notification via Firebase
-            $this->firebaseService->sendNotification(
+            Log::info('Attempting to send Firebase notification', [
+                'target_tokens' => $notificationReceiver->toArray(),
+                'title' => $data['title'],
+                'body' => $data['body']
+            ]);
+
+            $firebaseResult = $this->firebaseService->sendNotification(
                 target: $notificationReceiver,
                 title: $data['title'],
                 body: $data['body'],
                 payload: $payload
             );
-            Notification::create([
+
+            Log::info('Firebase notification attempt completed', [
+                'result' => $firebaseResult,
+                'receiver_id' => $data['receiver_id']
+            ]);
+
+            // Create notification record in database
+            Log::info('Creating notification record in database');
+
+            $notification = Notification::create([
                 'user_id' => $data['receiver_id'],
                 'title' => $data['title'],
                 'body' => $data['body'],
                 'payload' => $payload,
                 'status' => 0
             ]);
+
+            Log::info('Notification record created successfully', [
+                'notification_id' => $notification->id,
+                'receiver_id' => $data['receiver_id']
+            ]);
+
+            Log::info('sendNotification process completed successfully', [
+                'sender_id' => $data['sender_id'],
+                'receiver_id' => $data['receiver_id']
+            ]);
+
             return true;
 
         } catch (\Exception $e) {
-            Log::error('Error sending notification: ' . $e->getMessage());
+            Log::error('Error in sendNotification process', [
+                'sender_id' => $data['sender_id'] ?? null,
+                'receiver_id' => $data['receiver_id'] ?? null,
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
             return false;
         }
     }
-
     public function findMatches(Request $request)
     {
         try {
