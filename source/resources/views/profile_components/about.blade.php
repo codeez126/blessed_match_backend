@@ -69,7 +69,7 @@
     @foreach($user->clientFamilyMembers->where('type', '1') as $sind=>$sibling)
         <div class="col-md-4">
             <div style="
-                border:1px solid #8C37F8;
+                border:1px solid #e1d2d2;
                 border-radius:5px;
                 overflow:hidden;
             ">
@@ -77,7 +77,7 @@
                     <tbody>
                     @if(!empty($sibling->full_name))
                         <tr>
-                            <td style="background:#fde9fb; width:40%;"><strong>Name</strong></td>
+                            <td style="width:40%;"><strong>Name</strong></td>
                             <td>{{ $sibling->full_name }}</td>
                         </tr>
                     @endif
