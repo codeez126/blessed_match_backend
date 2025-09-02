@@ -257,10 +257,15 @@ class MatchmakingController extends Controller
             // Start with basic required fields
             $requestData = [
                 'gender_id' => $user->clientAbout->gender_id == 1 ? 2 : 1,
-                'client_name' => $request->client_name,
                 'page' => $request->page ?? 1,
                 'per_page' => $request->per_page ?? 50,
             ];
+
+            if ($request->client_name) {
+                $requestData = array_merge($requestData, [
+                    'client_name' => $request->client_name
+                ]);
+            }
 
             if ($user->clientAbout && $user->clientAbout->marital_status_id) {
                 $requestData['marital_status_id'] = [$user->clientAbout->marital_status_id];
