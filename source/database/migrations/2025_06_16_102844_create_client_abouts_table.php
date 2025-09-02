@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->string('profile_managed_by')->nullable();
             $table->tinyInteger('status')->default(0); // 0=pending, 1=approved, etc.
-            $table->string('reason_txt')->nullable();
+            $table->text('reason_txt')->nullable();
             $table->string('client_contact')->nullable();
             $table->string('cnic')->nullable();
 

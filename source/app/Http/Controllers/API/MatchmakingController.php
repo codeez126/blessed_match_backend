@@ -229,6 +229,7 @@ class MatchmakingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
+            'client_name' => 'nullable',
             'page' => 'sometimes|integer|min:1',
             'per_page' => 'sometimes|integer|min:1|max:100'
         ]);
@@ -256,6 +257,7 @@ class MatchmakingController extends Controller
             // Start with basic required fields
             $requestData = [
                 'gender_id' => $user->clientAbout->gender_id == 1 ? 2 : 1,
+                'client_name' => $request->client_name,
                 'page' => $request->page ?? 1,
                 'per_page' => $request->per_page ?? 50,
             ];

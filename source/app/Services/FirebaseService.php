@@ -29,18 +29,11 @@ class FirebaseService
         array $payload = [],
         bool $isTopic = false
     ): bool {
-        Log::info('FirebaseService: Starting notification send', [
-            'target_type' => gettype($target),
-            'target_value' => $target,
-            'title' => $title,
-            'is_topic' => $isTopic
-        ]);
 
         // Handle multiple tokens (collection/array)
         if (is_array($target) || $target instanceof \Illuminate\Support\Collection) {
             return $this->sendToMultipleTokens($target, $title, $body, $payload);
         }
-
         // Handle single token or topic
         return $this->sendToSingleTarget($target, $title, $body, $payload, $isTopic);
     }
@@ -51,12 +44,6 @@ class FirebaseService
     private function sendToMultipleTokens($tokens, string $title, string $body, array $payload = []): bool
     {
         $tokens = is_array($tokens) ? $tokens : $tokens->toArray();
-
-        Log::info('FirebaseService: Sending to multiple tokens', [
-            'token_count' => count($tokens),
-            'tokens' => $tokens
-        ]);
-
         $successCount = 0;
         $failureCount = 0;
 
@@ -75,12 +62,6 @@ class FirebaseService
             }
         }
 
-        Log::info('FirebaseService: Multiple token send completed', [
-            'success_count' => $successCount,
-            'failure_count' => $failureCount,
-            'total_tokens' => count($tokens)
-        ]);
-
         return $successCount > 0; // Return true if at least one succeeded
     }
 
@@ -89,12 +70,6 @@ class FirebaseService
      */
     private function sendToSingleTarget(string $target, string $title, string $body, array $payload = [], bool $isTopic = false): bool
     {
-        Log::info('FirebaseService: Sending to single target', [
-            'target' => $target,
-            'target_length' => strlen($target),
-            'is_topic' => $isTopic,
-            'title' => $title
-        ]);
 
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body))
@@ -106,7 +81,6 @@ class FirebaseService
         } else {
             $message = $message->withChangedTarget('token', $target);
         }
-
         try {
             $result = $this->messaging->send($message);
 
