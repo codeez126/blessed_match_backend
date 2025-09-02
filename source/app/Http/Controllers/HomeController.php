@@ -52,6 +52,7 @@ class HomeController extends Controller
             'nationalities',
             'clientLanguages.language',
             'clientImages',
+            'clientHobbies',
         ])->where('share_code', $share_code)->first();
 
 //        dd($user->clientProfession);exit();
