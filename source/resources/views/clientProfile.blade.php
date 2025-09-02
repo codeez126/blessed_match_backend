@@ -1,14 +1,52 @@
+<?php
+$description = '';
+
+if ($user->clientAbout && $user->clientAbout->full_name) {
+    $description .= 'Name: ' . $user->clientAbout->full_name . "\n";
+}
+
+if ($user->clientAbout && $user->clientAbout->dob) {
+    $description .= 'Age: ' . \Carbon\Carbon::parse($user->clientAbout->dob)->age . "\n";
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Asan Match</title>
+    <title>{{$user->clientAbout->full_name ?? 'Asan Match'}}</title>
     <meta name="keywords" content="Asan Match">
-    <meta name="description" content="Asan Match">
+    <meta name="description" content="{{$description}}">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow">
     <meta name="author" content="Asan Match">
+
+
+
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/png" href=" {{asset($user->clientAbout->profile_image ?? 'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg')}}"/>
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="keywords" content="Asan Match">
+    <meta name="description" content="{{$description}}">
+    <meta name="author" content="Assan Match">
+
+    <meta property="og:image" content=" {{asset($user->clientAbout->profile_image ?? 'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg')}}"/>
+    <meta property="og:title" content="{{$user->clientAbout->full_name ?? 'Asan Match'}}"/>
+    <meta property="og:url" content="{{str_replace('www.','',url()->current())}}"/>
+    <meta property="og:site_name" content="Asan Match"/>
+    <meta property="og:type" content="Company"/>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="{{str_replace('www.','',url()->current())}}" />
+    <meta name="twitter:title" content="{{$user->clientAbout->full_name ?? 'Asan Match'}}" />
+    <meta name="twitter:description" content="{{$description}}" />
+    <meta name="twitter:image" content=" {{asset($user->clientAbout->profile_image ?? 'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg')}}"/>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -124,6 +162,8 @@
 
     }
 </style>
+
+
 
 <div class="container">
     <div class="profile-card">
