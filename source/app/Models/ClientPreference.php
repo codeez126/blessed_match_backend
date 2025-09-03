@@ -18,10 +18,11 @@ class ClientPreference extends Model
     {
         return $this->belongsTo(Preference::class, 'preference_type');
     }
-    public function typeModel()
+
+    public function typeModel(): BelongsTo
     {
         if (!$this->preference) {
-            return $this->belongsTo(\App\Models\Preference::class, 'type_id')->whereRaw('0=1');
+            return $this->belongsTo(Preference::class, 'type_id')->whereRaw('0=1');
         }
 
         $map = [
@@ -43,7 +44,6 @@ class ClientPreference extends Model
 
         return $modelName
             ? $this->belongsTo($modelName, 'type_id')
-            : $this->belongsTo(\App\Models\Preference::class, 'type_id')->whereRaw('0=1');
+            : $this->belongsTo(Preference::class, 'type_id')->whereRaw('0=1');
     }
-
 }
