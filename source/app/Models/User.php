@@ -87,6 +87,19 @@ class User extends Authenticatable
             if ($matchRequestData) {
                 $chatRoomId = optional($matchRequestData->chatRoom)->id;
             }
+        }else{
+            $authUserId = Auth::id();
+            if ($authUserId){
+            $matchRequestData = MatchRequest::where(function ($q) use ($authUserId) {
+                $q->where('requesting_mm_id', $authUserId)
+                    ->where('receiving_user_id', $this->id);
+            })
+                ->orWhere(function ($q) use ($authUserId) {
+                    $q->where('requesting_user_id', $this->id)
+                        ->where('receiving_mm_id', $authUserId);
+                })
+                ->first();
+            }
         }
         return [
             'id' => $this->id,

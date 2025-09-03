@@ -46,8 +46,6 @@ class PrefrencesController extends Controller
                     'max_value'       => $pref['max_value'] ?? null,
                 ]);
             }
-
-
             $preferences = ClientPreference::with('preference')
                 ->where('user_id', $user->id)
                 ->get()
