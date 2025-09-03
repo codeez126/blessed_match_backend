@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ClientPreference extends Model
 {
     protected $fillable = ['user_id', 'preference_type', 'type_id', 'min_value', 'max_value'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function user(): BelongsTo
     {
