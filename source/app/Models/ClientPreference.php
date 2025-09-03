@@ -9,7 +9,7 @@ class ClientPreference extends Model
 {
     protected $fillable = ['user_id', 'preference_type', 'type_id', 'min_value', 'max_value'];
     protected $hidden = ['created_at', 'updated_at'];
-
+    protected $appends = ['type_model'];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
