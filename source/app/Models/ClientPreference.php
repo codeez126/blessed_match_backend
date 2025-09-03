@@ -20,23 +20,28 @@ class ClientPreference extends Model
     }
     public function typeModel()
     {
+        if (!$this->preference) {
+            return null;
+        }
+
         $map = [
-            'MaritalStatus' => \App\Models\MaritalStatus::class,
-            'Nationality'   => \App\Models\Nationality::class,
-            'City'          => \App\Models\City::class,
-            'FamilyClass'   => \App\Models\FamilyClass::class,
-            'HouseStatus'   => \App\Models\HouseStatus::class,
-            'HouseSize'     => \App\Models\HouseSize::class,
-            'Occupation'    => \App\Models\Occupation::class,
-            'Education'     => \App\Models\Education::class,
-            'EmploymentStatus' => \App\Models\EmploymentStatus::class,
-            'Religion'      => \App\Models\Religion::class,
-            'Sect'          => \App\Models\Sect::class,
-            'Cast'          => \App\Models\Cast::class,
+            'MaritalStatus'     => \App\Models\MaritalStatus::class,
+            'Nationality'       => \App\Models\Nationality::class,
+            'City'              => \App\Models\City::class,
+            'FamilyClass'       => \App\Models\FamilyClass::class,
+            'HouseStatus'       => \App\Models\HouseStatus::class,
+            'HouseSize'         => \App\Models\HouseSize::class,
+            'Occupation'        => \App\Models\Occupation::class,
+            'Education'         => \App\Models\Education::class,
+            'EmploymentStatus'  => \App\Models\EmploymentStatus::class,
+            'Religion'          => \App\Models\Religion::class,
+            'Sect'              => \App\Models\Sect::class,
+            'Cast'              => \App\Models\Cast::class,
         ];
 
         $modelName = $map[$this->preference->name] ?? null;
 
         return $modelName ? $this->belongsTo($modelName, 'type_id') : null;
     }
+
 }
