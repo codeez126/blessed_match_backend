@@ -73,66 +73,33 @@ class User extends Authenticatable
         $matchRequestData = null;
         $chatRoomId = null;
 
-
         if ($requestingUserId) {
-            Log::info('Checking match request with requestingUserId', [
-                'requestingUserId' => $requestingUserId,
-                'currentUserId' => $this->id,
-            ]);
-
             $matchRequestData = MatchRequest::where(function ($q) use ($requestingUserId) {
-                $q->where('requesting_user_id', $requestingUserId)
-                    ->where('receiving_user_id', $this->id);
+                $q->where(function ($q2) use ($requestingUserId) {
+                    $q2->where('requesting_user_id', $requestingUserId)
+                        ->orWhere('requesting_mm_id', $requestingUserId);
+                })
+                    ->where(function ($q2) {
+                        $q2->where('receiving_user_id', $this->id)
+                            ->orWhere('receiving_mm_id', $this->id);
+                    });
             })
                 ->orWhere(function ($q) use ($requestingUserId) {
-                    $q->where('requesting_user_id', $this->id)
-                        ->where('receiving_user_id', $requestingUserId);
+                    $q->where(function ($q2) {
+                        $q2->where('requesting_user_id', $this->id)
+                            ->orWhere('requesting_mm_id', $this->id);
+                    })
+                        ->where(function ($q2) use ($requestingUserId) {
+                            $q2->where('receiving_user_id', $requestingUserId)
+                                ->orWhere('receiving_mm_id', $requestingUserId);
+                        });
                 })
                 ->first();
 
-            Log::info('Match request query (requestingUserId branch)', [
-                'matchRequestData' => $matchRequestData,
-            ]);
-
             if ($matchRequestData) {
                 $chatRoomId = optional($matchRequestData->chatRoom)->id;
-                Log::info('Chat room found', ['chatRoomId' => $chatRoomId]);
-            } else {
-                Log::warning('No match request found (requestingUserId branch)');
-            }
-        } else {
-            $authUserId = Auth::id();
-            Log::info('Checking match request with Auth user', [
-                'authUserId' => $authUserId,
-                'currentUserId' => $this->id,
-            ]);
-
-            if ($authUserId) {
-                $matchRequestData = MatchRequest::where(function ($q) use ($authUserId) {
-                    $q->where('requesting_mm_id', $authUserId)
-                        ->where('receiving_user_id', $this->id);
-                })
-                    ->orWhere(function ($q) use ($authUserId) {
-                        $q->where('requesting_user_id', $this->id)
-                            ->where('receiving_mm_id', $authUserId);
-                    })
-                    ->first();
-
-                Log::info('Match request query (authUserId branch)', [
-                    'matchRequestData' => $matchRequestData,
-                ]);
-
-                if ($matchRequestData) {
-                    $chatRoomId = optional($matchRequestData->chatRoom)->id;
-                    Log::info('Chat room found', ['chatRoomId' => $chatRoomId]);
-                } else {
-                    Log::warning('No match request found (authUserId branch)');
-                }
-            } else {
-                Log::error('Auth::id() returned null');
             }
         }
-
         return [
             'id' => $this->id,
             'status' => $this->status,

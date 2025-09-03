@@ -57,7 +57,8 @@ class HomeController extends Controller
                     })
                     ->first();
             }
-            $card = $client->clientProfileCard();
+
+            $card = $client->clientProfileCard(null, $loggedInUser->id);
             $card['chat_room_id'] = $chatRoom ? $chatRoom->id : null;
 
             return $card;
