@@ -12,7 +12,7 @@ class PrefrencesController extends Controller
 {
     public function storeClientPreferences(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user_id;
 
         $validator = Validator::make($request->all(), [
             'preferences'   => 'required|array|min:1',
