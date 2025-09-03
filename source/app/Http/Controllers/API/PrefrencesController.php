@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\ClientPreference;
 use App\Models\MmProfile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,7 +13,15 @@ class PrefrencesController extends Controller
 {
     public function storeClientPreferences(Request $request)
     {
-        $user = $request->user_id;
+        $user = User::find($request->user_id);
+        if (!$user){
+            return response()->json([
+                'status'  => false,
+                'message' =>  'User Not Found',
+                'data'    => [],
+                'errors'  => 'User Not Found'
+            ], 422);
+        }
 
         $validator = Validator::make($request->all(), [
             'preferences'   => 'required|array|min:1',
