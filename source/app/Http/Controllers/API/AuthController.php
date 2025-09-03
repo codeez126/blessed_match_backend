@@ -1466,6 +1466,7 @@ class AuthController extends Controller
                 'nationalities',
                 'clientLanguages.language',
                 'clientImages',
+                'clientPreferences.preference',
             ])->find($request->user_id);
             $user->client_hobbies = $user->groupedHobbies();
 

@@ -261,6 +261,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(ChatRoom::class, 'receiver_id');
     }
+    public function clientPreferences()
+    {
+        return $this->hasMany(ClientPreference::class, 'user_id');
+    }
 
 
 }
