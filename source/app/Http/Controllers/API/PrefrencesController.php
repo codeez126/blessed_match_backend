@@ -47,9 +47,15 @@ class PrefrencesController extends Controller
                 ]);
             }
 
-            $preferences = ClientPreference::with('preference', 'typeModel')
+
+            $preferences = ClientPreference::with('preference')
                 ->where('user_id', $user->id)
-                ->get();
+                ->get()
+                ->map(function ($pref) {
+                    $pref->setRelation('type_model', $pref->typeModel()->first());
+                    return $pref;
+                });
+
 
             return $this->apiResponse([
                 'preferences' => $preferences
