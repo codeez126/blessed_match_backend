@@ -74,6 +74,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('client-images', [\App\Http\Controllers\API\AuthController::class, 'clientImageSave']);
     Route::post('client-image-update', [\App\Http\Controllers\API\AuthController::class, 'storeClientImages']);
 
+    Route::post('client-preferences-save', [\App\Http\Controllers\API\PrefrencesController::class, 'storeClientPreferences']);
+
     Route::post('client-paragraph', [\App\Http\Controllers\API\ClientParagraphController::class, 'generate']);
 
     Route::post('toggle-wishlist', [\App\Http\Controllers\API\HomeController::class, 'toggleWishlist']);

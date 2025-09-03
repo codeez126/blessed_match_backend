@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
 //             OfficeTypesTableSeeder::class,
 //             PaymentPlanSeeder::class,
 //             PaymentMethodSeeder::class,
+             PreferenceSeeder::class,
 
 //            MatchMakerProfilesSeeder::class
 
