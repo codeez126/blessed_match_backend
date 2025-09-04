@@ -163,16 +163,34 @@ class ChatService
             }
 
 //            preparing user for notification
+            // Check receiver online status with detailed logging
             $receiverOnlineStatus = RoomUser::where('chat_room_id', $data['room_id'])
                 ->where('user_id', $data['receiver_id'])
                 ->value('is_online');
+
             $isReceiverOffline = ($receiverOnlineStatus === 0);
+
+// Log detailed status information
+            Log::info("Message delivery status check", [
+                'room_id' => $data['room_id'],
+                'sender_id' => $data['sender_id'],
+                'receiver_id' => $data['receiver_id'],
+                'receiver_online_status' => $receiverOnlineStatus,
+                'is_receiver_offline' => $isReceiverOffline,
+                'message_content' => substr($data['message'], 0, 100) . (strlen($data['message']) > 100 ? '...' : ''),
+                'check_timestamp' => now()->toISOString()
+            ]);
+
             if ($isReceiverOffline && !empty($data['receiver_id'])) {
                 Log::info("Sending push notification to offline receiver", [
                     'receiver_id' => $data['receiver_id'],
                     'sender_id' => $data['sender_id'],
-                    'room_id' => $data['room_id']
+                    'room_id' => $data['room_id'],
+                    'receiver_status' => 'offline',
+                    'notification_trigger' => 'receiver_offline',
+                    'notification_timestamp' => now()->toISOString()
                 ]);
+
                 $notificationData = [
                     'sender_id' => $data['sender_id'],
                     'receiver_id' => $data['receiver_id'],
@@ -181,8 +199,56 @@ class ChatService
                     'title' => 'New Message Received',
                     'body' => $data['message']
                 ];
-                $this->sendNotification($notificationData);
+
+                $notificationResult = $this->sendNotification($notificationData);
+
+                Log::info("Notification dispatch result", [
+                    'receiver_id' => $data['receiver_id'],
+                    'notification_sent' => $notificationResult,
+                    'dispatch_timestamp' => now()->toISOString()
+                ]);
+
+            } else if (!empty($data['receiver_id'])) {
+                // Log when receiver is online (no notification needed)
+                Log::info("Receiver is online - no notification sent", [
+                    'receiver_id' => $data['receiver_id'],
+                    'sender_id' => $data['sender_id'],
+                    'room_id' => $data['room_id'],
+                    'receiver_status' => 'online',
+                    'online_status_value' => $receiverOnlineStatus,
+                    'message_delivered' => 'real_time',
+                    'check_timestamp' => now()->toISOString()
+                ]);
+            } else {
+                // Log when receiver_id is missing or empty
+                Log::warning("Receiver ID missing - cannot send notification", [
+                    'sender_id' => $data['sender_id'],
+                    'room_id' => $data['room_id'],
+                    'receiver_id_provided' => !empty($data['receiver_id']),
+                    'receiver_id_value' => $data['receiver_id'] ?? 'null',
+                    'check_timestamp' => now()->toISOString()
+                ]);
             }
+
+// Additional: Log all users in the room and their online status
+            $roomUsers = RoomUser::where('chat_room_id', $data['room_id'])
+                ->with('user') // assuming you have a relationship to User model
+                ->get(['user_id', 'is_online']);
+
+            Log::info("Room users online status", [
+                'room_id' => $data['room_id'],
+                'total_users' => $roomUsers->count(),
+                'online_users' => $roomUsers->where('is_online', 1)->count(),
+                'offline_users' => $roomUsers->where('is_online', 0)->count(),
+                'users_details' => $roomUsers->map(function($user) {
+                    return [
+                        'user_id' => $user->user_id,
+                        'is_online' => $user->is_online,
+                        'user_name' => $user->user->name ?? 'Unknown' // adjust based on your User model
+                    ];
+                }),
+                'log_timestamp' => now()->toISOString()
+            ]);
 
 
             $messageData = [
