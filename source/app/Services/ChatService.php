@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use App\Models\DeviceToken;
 use App\Models\Media;
+use App\Models\Notification;
 use App\Models\RoomUser;
 use App\Models\User;
+use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Workerman\Mqtt\Client;
@@ -14,8 +17,13 @@ use Workerman\Mqtt\Client;
 
 class ChatService
 {
-    public function __construct()
+    protected FirebaseService $firebaseService;
+
+    public function __construct(
+        FirebaseService $firebaseService
+    )
     {
+        $this->firebaseService = $firebaseService;
     }
 
 
@@ -149,10 +157,33 @@ class ChatService
             if (!empty($data['attachment_id'])) {
                 Media::where('id', $data['attachment_id'])->update([
                     'user_id' => $data['sender_id'],
-                    'mediaable_type'=>ChatMessage::class,
-                    'mediaable_id'=> $message->id
+                    'mediaable_type' => ChatMessage::class,
+                    'mediaable_id' => $message->id
                 ]);
             }
+
+//            preparing user for notification
+            $receiverOnlineStatus = RoomUser::where('chat_room_id', $data['room_id'])
+                ->where('user_id', $data['receiver_id'])
+                ->value('is_online');
+            $isReceiverOffline = ($receiverOnlineStatus === 0);
+            if ($isReceiverOffline && !empty($data['receiver_id'])) {
+                Log::info("Sending push notification to offline receiver", [
+                    'receiver_id' => $data['receiver_id'],
+                    'sender_id' => $data['sender_id'],
+                    'room_id' => $data['room_id']
+                ]);
+                $notificationData = [
+                    'sender_id' => $data['sender_id'],
+                    'receiver_id' => $data['receiver_id'],
+                    'type' => 'chat_message',
+                    'type_id' => $chatRoom->id,
+                    'title' => 'New Message Received',
+                    'body' => $data['message']
+                ];
+                $this->sendNotification($notificationData);
+            }
+
 
             $messageData = [
                 'success' => true,
@@ -252,6 +283,63 @@ class ChatService
                 'chat_room_id' => $chatRoomId
             ]
         ]));
+    }
+
+
+//    notification
+    private function sendNotification(array $data)
+    {
+        try {
+            // Get device tokens for the receiver
+            $notificationReceiver = DeviceToken::where('user_id', $data['receiver_id'])
+                ->pluck('device_token');
+
+            if ($notificationReceiver->isEmpty()) {
+                Log::error('No device token found for user ID: ' . $data['receiver_id']);
+                return false;
+            }
+            $receiverUser = User::with(['mmProfile', 'clientAbout'])->find($data['receiver_id'] ?? null);
+            if ($receiverUser->type === 1) {
+                $receiverName = $receiverUser->mmProfile->business_name ?? $receiverUser->mmProfile->full_name;
+                $otherUserImage = $receiverUser->mmProfile->business_card;
+            }else{
+                $receiverName= $receiverUser->clientAbout->full_name;
+                $otherUserImage = $receiverUser->clientAbout->profile_image;
+            }
+            $payload = [
+                'userId' => $data['sender_id'],
+                'receiverId' => $data['receiver_id'],
+                'chatRoomId' => $data['type_id'],
+                'otherUserName' => $receiverName ?? 'Match Maker ' . $data['receiver_id'],
+                'otherUserImage' => $otherUserImage,
+            ];
+            $firebaseResult = $this->firebaseService->sendNotification(
+                target: $notificationReceiver,
+                title: $data['title'],
+                body: $data['body'],
+                payload: $payload
+            );
+            // Create notification record in database
+            $notification = Notification::create([
+                'user_id' => $data['receiver_id'],
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'payload' => $payload,
+                'status' => 0
+            ]);
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('Error in sendNotification process', [
+                'sender_id' => $data['sender_id'] ?? null,
+                'receiver_id' => $data['receiver_id'] ?? null,
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
+            return false;
+        }
     }
 
 }
