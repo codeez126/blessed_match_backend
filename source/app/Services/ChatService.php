@@ -266,59 +266,59 @@ class ChatService
 
 
 //    notification
-//    private function sendNotification(array $data)
-//    {
-//        try {
-//            // Get device tokens for the receiver
-//            $notificationReceiver = DeviceToken::where('user_id', $data['receiver_id'])
-//                ->pluck('device_token');
-//
-//            if ($notificationReceiver->isEmpty()) {
-//                Log::error('No device token found for user ID: ' . $data['receiver_id']);
-//                return false;
-//            }
-//            $receiverUser = User::with(['mmProfile', 'clientAbout'])->find($data['receiver_id'] ?? null);
-//            if ($receiverUser->type === 1) {
-//                $receiverName = $receiverUser->mmProfile->business_name ?? $receiverUser->mmProfile->full_name;
-//                $otherUserImage = $receiverUser->mmProfile->business_card;
-//            }else{
-//                $receiverName= $receiverUser->clientAbout->full_name;
-//                $otherUserImage = $receiverUser->clientAbout->profile_image;
-//            }
-//            $payload = [
-//                'userId' => $data['sender_id'],
-//                'receiverId' => $data['receiver_id'],
-//                'chatRoomId' => $data['type_id'],
-//                'otherUserName' => $receiverName ?? 'Match Maker ' . $data['receiver_id'],
-//                'otherUserImage' => $otherUserImage,
-//            ];
-//            $firebaseResult = $this->firebaseService->sendNotification(
-//                target: $notificationReceiver,
-//                title: $data['title'],
-//                body: $data['body'],
-//                payload: $payload
-//            );
-//            // Create notification record in database
-//            $notification = Notification::create([
-//                'user_id' => $data['receiver_id'],
-//                'title' => $data['title'],
-//                'body' => $data['body'],
-//                'payload' => $payload,
-//                'status' => 0
-//            ]);
-//            return true;
-//
-//        } catch (\Exception $e) {
-//            Log::error('Error in sendNotification process', [
-//                'sender_id' => $data['sender_id'] ?? null,
-//                'receiver_id' => $data['receiver_id'] ?? null,
-//                'error_message' => $e->getMessage(),
-//                'error_file' => $e->getFile(),
-//                'error_line' => $e->getLine(),
-//                'stack_trace' => $e->getTraceAsString()
-//            ]);
-//            return false;
-//        }
-//    }
+    private function sendNotification(array $data)
+    {
+        try {
+            // Get device tokens for the receiver
+            $notificationReceiver = DeviceToken::where('user_id', $data['receiver_id'])
+                ->pluck('device_token');
+
+            if ($notificationReceiver->isEmpty()) {
+                Log::error('No device token found for user ID: ' . $data['receiver_id']);
+                return false;
+            }
+            $receiverUser = User::with(['mmProfile', 'clientAbout'])->find($data['receiver_id'] ?? null);
+            if ($receiverUser->type === 1) {
+                $receiverName = $receiverUser->mmProfile->business_name ?? $receiverUser->mmProfile->full_name;
+                $otherUserImage = $receiverUser->mmProfile->business_card;
+            }else{
+                $receiverName= $receiverUser->clientAbout->full_name;
+                $otherUserImage = $receiverUser->clientAbout->profile_image;
+            }
+            $payload = [
+                'userId' => $data['sender_id'],
+                'receiverId' => $data['receiver_id'],
+                'chatRoomId' => $data['type_id'],
+                'otherUserName' => $receiverName ?? 'Match Maker ' . $data['receiver_id'],
+                'otherUserImage' => $otherUserImage,
+            ];
+            $firebaseResult = $this->firebaseService->sendNotification(
+                target: $notificationReceiver,
+                title: $data['title'],
+                body: $data['body'],
+                payload: $payload
+            );
+            // Create notification record in database
+            $notification = Notification::create([
+                'user_id' => $data['receiver_id'],
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'payload' => $payload,
+                'status' => 0
+            ]);
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('Error in sendNotification process', [
+                'sender_id' => $data['sender_id'] ?? null,
+                'receiver_id' => $data['receiver_id'] ?? null,
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
+            return false;
+        }
+    }
 
 }
