@@ -72,5 +72,35 @@ class PrefrencesController extends Controller
             return $this->apiResponse([], 'Preferences update failed: ' . $e->getMessage(), 500);
         }
     }
+    public function removeClientPreferences(Request $request)
+    {
+        try {
+            $user = User::find($request->user_id);
+
+            if (!$user) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'User Not Found',
+                    'data'    => [],
+                    'errors'  => 'User Not Found'
+                ], 422);
+            }
+
+            ClientPreference::where('user_id', $user->id)->delete();
+
+            return $this->apiResponse([
+                null,
+            ], 'Preferences Deleted successfully');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'data'    => [],
+                'errors'  => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 }

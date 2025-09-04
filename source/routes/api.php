@@ -75,6 +75,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('client-image-update', [\App\Http\Controllers\API\AuthController::class, 'storeClientImages']);
 
     Route::post('client-preferences-save', [\App\Http\Controllers\API\PrefrencesController::class, 'storeClientPreferences']);
+    Route::post('client-preferences-remove', [\App\Http\Controllers\API\PrefrencesController::class, 'removeClientPreferences']);
 
     Route::post('client-paragraph', [\App\Http\Controllers\API\ClientParagraphController::class, 'generate']);
 
