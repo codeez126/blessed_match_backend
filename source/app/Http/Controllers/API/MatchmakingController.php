@@ -26,6 +26,15 @@ class MatchmakingController extends Controller
         $this->filterService = $filterService;
         $this->firebaseService = $firebaseService;
     }
+    public function getNotification()
+    {
+        $notification = Notification::where('user_id', Auth::id())->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Notification Featched Successfully',
+            'data' => $notification
+        ]);
+    }
 
     private function sendNotification(array $data)
     {

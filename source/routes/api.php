@@ -27,6 +27,7 @@ Route::post('app-terms', [\App\Http\Controllers\API\HomeController::class, 'appt
 
 Route::post('home', [\App\Http\Controllers\API\HomeController::class, 'simpleHome']);
 Route::post('send-notification', [\App\Http\Controllers\API\MatchmakingController::class, 'sendNotification']);
+Route::post('get-notification', [\App\Http\Controllers\API\MatchmakingController::class, 'getNotification']);
 Route::post('start-up', [\App\Http\Controllers\API\HomeController::class, 'startUp']);
 
 
