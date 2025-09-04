@@ -27,7 +27,6 @@ Route::post('app-terms', [\App\Http\Controllers\API\HomeController::class, 'appt
 
 Route::post('home', [\App\Http\Controllers\API\HomeController::class, 'simpleHome']);
 Route::post('send-notification', [\App\Http\Controllers\API\MatchmakingController::class, 'sendNotification']);
-Route::post('get-notification', [\App\Http\Controllers\API\MatchmakingController::class, 'getNotification']);
 Route::post('start-up', [\App\Http\Controllers\API\HomeController::class, 'startUp']);
 
 
@@ -38,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/update-device-token', [\App\Http\Controllers\API\AuthController::class, 'updateToken']);
     Route::post('/get-setting', [\App\Http\Controllers\API\AuthController::class, 'getSetting']);
     Route::post('/update-setting', [\App\Http\Controllers\API\AuthController::class, 'updateSetting']);
+    Route::post('get-notification', [\App\Http\Controllers\API\MatchmakingController::class, 'getNotification']);
     Route::post('/logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
 
     Route::post('/create-room', [\App\Http\Controllers\API\ChatController::class, 'createRoom']);
