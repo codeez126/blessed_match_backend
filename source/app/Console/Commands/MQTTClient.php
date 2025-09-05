@@ -103,7 +103,6 @@ class MQTTClient extends Command
                             ]);
                             $chatService->appPresence($payload, $mqtt, $topic[2] ?? null);
                             break;
-
                         case 'presence':
                             $chatService->presence($payload, $mqtt);
                             break;
