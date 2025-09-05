@@ -17,12 +17,12 @@ use Workerman\Mqtt\Client;
 
 class ChatService
 {
-    protected FirebaseService $firebaseService;
-
-    public function __construct(FirebaseService $firebaseService)
-    {
-        $this->firebaseService = $firebaseService;
-    }
+//    protected FirebaseService $firebaseService;
+//
+//    public function __construct(FirebaseService $firebaseService)
+//    {
+//        $this->firebaseService = $firebaseService;
+//    }
 
 
     public function joinRoom(mixed $data, Client $mqtt)
