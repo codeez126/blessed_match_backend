@@ -353,7 +353,7 @@ class ChatService
     private function callFirebaseNotificationAPI($target, string $title, string $body, array $payload = []): bool
     {
         try {
-            $response = Http::timeout(30)->post(url('/api/send-firebase-notification'), [
+            $response = Http::timeout(30)->post('https://match.m2lgx.com/api/send-firebase-notification', [
                 'target' => $target,
                 'title' => $title,
                 'body' => $body,
