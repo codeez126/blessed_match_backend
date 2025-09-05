@@ -20,19 +20,19 @@ class ChatService
     protected FirebaseService $firebaseService;
 
     // MQTT chat service میں
-    public function __construct(FirebaseService $firebaseService)
-    {
-        \Log::info('MQTT Chat service - before Firebase injection');
-
-        $this->firebaseService = $firebaseService;
-
-        \Log::info('MQTT Chat service - after Firebase injection');
-
-        // MQTT connection status
-        if (isset($this->mqttClient)) {
-            \Log::info('MQTT connection status: ' . $this->mqttClient->isConnected());
-        }
-    }
+//    public function __construct(FirebaseService $firebaseService)
+//    {
+//        \Log::info('MQTT Chat service - before Firebase injection');
+//
+//        $this->firebaseService = $firebaseService;
+//
+//        \Log::info('MQTT Chat service - after Firebase injection');
+//
+//        // MQTT connection status
+//        if (isset($this->mqttClient)) {
+//            \Log::info('MQTT connection status: ' . $this->mqttClient->isConnected());
+//        }
+//    }
 
 
     public function joinRoom(mixed $data, Client $mqtt)
