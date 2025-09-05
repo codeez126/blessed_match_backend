@@ -228,12 +228,8 @@ class ChatService
         ]);
     }
 
-    public function appPresence(mixed $data, Client $mqtt, $userId = null)
+    public function appPresence(mixed $data, Client $mqtt)
     {
-        \Log::info("🔔 appPresence triggered", [
-            'raw_data' => $data,
-            'topic_user_id' => $userId
-        ]);
         try {
 
             $user = User::find($userId ?? ($data['user_id'] ?? null));
