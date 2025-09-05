@@ -232,13 +232,13 @@ class ChatService
     {
         try {
 
-            $user = User::find($userId ?? ($data['user_id'] ?? null));
+            $user = User::find($data['user_id'] ?? null);
             if (!$user) {
                 \Log::warning("appPresence: User not found", [
-                    'user_id' => $userId,
+                    'user_id' => $user->id,
                     'payload' => $data
                 ]);
-                $mqtt->publish("chat/{$userId}/error", json_encode([
+                $mqtt->publish("chat/{$data['user_id']}/error", json_encode([
                     'success' => false,
                     'message' => 'User not found'
                 ]));
@@ -251,22 +251,22 @@ class ChatService
 
             $mqtt->publish("app_presence/{$user->id}", json_encode([
                 'success' => true,
-                'user_id' => $user->id,
+                'user_id' => $data['user_id'] ?? null,
                 'is_online' => $status
             ]));
 
             \Log::info("✅ App Presence updated", [
-                'user_id' => $user->id,
+                'user_id' => $data['user_id'] ?? null,
                 'is_online' => $status
             ]);
 
         } catch (\Exception $e) {
-            $mqtt->publish("chat/{$userId}/error", json_encode([
+            $mqtt->publish("chat/{$data['user_id']}/error", json_encode([
                 'success' => false,
                 'message' => $e->getMessage()
             ]));
             \Log::error("❌ App presence error", [
-                'user_id' => $userId,
+                'user_id' => $data['user_id'] ?? null,
                 'error'   => $e->getMessage(),
                 'trace'   => $e->getTraceAsString()
             ]);

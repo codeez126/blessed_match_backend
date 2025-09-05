@@ -82,12 +82,18 @@ class MQTTClient extends Command
                     $payload = json_decode($content, true);
 
 
-                    $topic = explode('/', $topic);
-                    $command = $topic[1] ?? null;
+                    $topicParts = explode('/', $topic);
+                    $command = $topicParts[1] ?? null;
 
-                    if (isset($topic[1]) && $topic[1] == 'presence') {
+// Handle app_presence topic (app_presence/555)
+                    if ($topicParts[0] === 'app_presence') {
+                        $command = "app_presence";
+                        $payload['user_id'] = $payload['user_id'] ?? $topicParts[1] ?? null;
+                    }
+// Handle chat presence topic (chat/presence/555)
+                    elseif (isset($topicParts[1]) && $topicParts[1] == 'presence') {
                         $command = "presence";
-                        $payload['user_id'] = $payload['user_id'] ?? $topic[2] ?? null;
+                        $payload['user_id'] = $payload['user_id'] ?? $topicParts[2] ?? null;
                     }
                     switch ($command) {
                         case 'join-room':
