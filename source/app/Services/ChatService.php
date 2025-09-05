@@ -230,8 +230,17 @@ class ChatService
     public function appPresence(mixed $data, Client $mqtt, $userId = null)
     {
         try {
+            \Log::info("🔔 appPresence triggered", [
+                'raw_data' => $data,
+                'topic_user_id' => $userId
+            ]);
+
             $user = User::find($userId ?? ($data['user_id'] ?? null));
             if (!$user) {
+                \Log::warning("appPresence: User not found", [
+                    'user_id' => $userId,
+                    'payload' => $data
+                ]);
                 $mqtt->publish("chat/{$userId}/error", json_encode([
                     'success' => false,
                     'message' => 'User not found'
@@ -239,7 +248,6 @@ class ChatService
                 return;
             }
 
-            // Default offline
             $status = isset($data['is_online']) && $data['is_online'] == 1 ? 1 : 0;
 
             $user->update(['is_online' => $status]);
@@ -250,7 +258,7 @@ class ChatService
                 'is_online' => $status
             ]));
 
-            \Log::info("App Presence updated", [
+            \Log::info("✅ App Presence updated", [
                 'user_id' => $user->id,
                 'is_online' => $status
             ]);
@@ -260,9 +268,14 @@ class ChatService
                 'success' => false,
                 'message' => $e->getMessage()
             ]));
-            \Log::error("App presence error: " . $e->getMessage());
+            \Log::error("❌ App presence error", [
+                'user_id' => $userId,
+                'error'   => $e->getMessage(),
+                'trace'   => $e->getTraceAsString()
+            ]);
         }
     }
+
 
 
     public function getConversations(mixed $userId)
