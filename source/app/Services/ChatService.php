@@ -111,8 +111,6 @@ class ChatService
 
     public function sendMessage(mixed $data, Client $mqtt)
     {
-        \Log::info("🔔 furqan", [
-        ]);
 
         $validator = Validator::make($data, [
             'room_id' => 'required|integer|exists:chat_rooms,id',
@@ -232,11 +230,11 @@ class ChatService
 
     public function appPresence(mixed $data, Client $mqtt, $userId = null)
     {
+        \Log::info("🔔 appPresence triggered", [
+            'raw_data' => $data,
+            'topic_user_id' => $userId
+        ]);
         try {
-            \Log::info("🔔 appPresence triggered", [
-                'raw_data' => $data,
-                'topic_user_id' => $userId
-            ]);
 
             $user = User::find($userId ?? ($data['user_id'] ?? null));
             if (!$user) {
