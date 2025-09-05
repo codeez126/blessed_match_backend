@@ -211,10 +211,19 @@ class ChatController extends Controller
                 'is_topic' => 'nullable|boolean'
             ]);
 
+            $body = $request->input('body');
+
+// log with unicode preserved
+            Log::info('Notification body check', [
+                'raw' => $body,
+                'json_unescaped' => json_encode($body, JSON_UNESCAPED_UNICODE)
+            ]);
+
+
             // Get validated data
             $target = $request->input('target');
             $title = $request->input('title');
-            $body = utf8_decode(utf8_encode($request->input('body')));
+            $body = $request->input('body');
             $payload = $request->input('payload', []);
             $isTopic = $request->input('is_topic', false);
 
