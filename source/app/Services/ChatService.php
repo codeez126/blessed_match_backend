@@ -17,12 +17,18 @@ use Workerman\Mqtt\Client;
 
 class ChatService
 {
-//    protected FirebaseService $firebaseService;
-//
-//    public function __construct(FirebaseService $firebaseService)
-//    {
-//        $this->firebaseService = $firebaseService;
-//    }
+    protected FirebaseService $firebaseService;
+
+    public function __construct(FirebaseService $firebaseService)
+    {
+        try {
+        $this->firebaseService = $firebaseService;
+            \Log::info('Chat service constructor called');
+        } catch (\Exception $e) {
+            \Log::error('Constructor error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
 
 
     public function joinRoom(mixed $data, Client $mqtt)
