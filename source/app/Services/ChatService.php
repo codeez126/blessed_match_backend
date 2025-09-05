@@ -9,30 +9,13 @@ use App\Models\Media;
 use App\Models\Notification;
 use App\Models\RoomUser;
 use App\Models\User;
-use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Workerman\Mqtt\Client;
-
+use Illuminate\Support\Facades\Http;
 
 class ChatService
 {
-    protected FirebaseService $firebaseService;
-
-    // MQTT chat service میں
-//    public function __construct(FirebaseService $firebaseService)
-//    {
-//        \Log::info('MQTT Chat service - before Firebase injection');
-//
-//        $this->firebaseService = $firebaseService;
-//
-//        \Log::info('MQTT Chat service - after Firebase injection');
-//
-//        // MQTT connection status
-//        if (isset($this->mqttClient)) {
-//            \Log::info('MQTT connection status: ' . $this->mqttClient->isConnected());
-//        }
-//    }
 
 
     public function joinRoom(mixed $data, Client $mqtt)
@@ -175,6 +158,27 @@ class ChatService
             }
 
 
+//            preparing user for notification
+            $receiverOnlineStatus = RoomUser::where('chat_room_id', $data['room_id'])
+                ->where('user_id', $data['receiver_id'])
+                ->value('is_online');
+            $isReceiverOffline = ($receiverOnlineStatus === 0);
+            if ($isReceiverOffline && !empty($data['receiver_id'])) {
+                Log::info("Sending push notification to offline receiver", [
+                    'receiver_id' => $data['receiver_id'],
+                    'sender_id' => $data['sender_id'],
+                    'room_id' => $data['room_id']
+                ]);
+                $notificationData = [
+                    'sender_id' => $data['sender_id'],
+                    'receiver_id' => $data['receiver_id'],
+                    'type' => 'chat_message',
+                    'type_id' => $chatRoom->id,
+                    'title' => 'New Message Received',
+                    'body' => $data['message']
+                ];
+                $this->sendNotification($notificationData);
+            }
 
             $messageData = [
                 'success' => true,
@@ -289,14 +293,16 @@ class ChatService
                 Log::error('No device token found for user ID: ' . $data['receiver_id']);
                 return false;
             }
+
             $receiverUser = User::with(['mmProfile', 'clientAbout'])->find($data['receiver_id'] ?? null);
             if ($receiverUser->type === 1) {
                 $receiverName = $receiverUser->mmProfile->business_name ?? $receiverUser->mmProfile->full_name;
                 $otherUserImage = $receiverUser->mmProfile->business_card;
-            }else{
-                $receiverName= $receiverUser->clientAbout->full_name;
+            } else {
+                $receiverName = $receiverUser->clientAbout->full_name;
                 $otherUserImage = $receiverUser->clientAbout->profile_image;
             }
+
             $payload = [
                 'userId' => $data['sender_id'],
                 'receiverId' => $data['receiver_id'],
@@ -304,12 +310,19 @@ class ChatService
                 'otherUserName' => $receiverName ?? 'Match Maker ' . $data['receiver_id'],
                 'otherUserImage' => $otherUserImage,
             ];
-            $firebaseResult = $this->firebaseService->sendNotification(
-                target: $notificationReceiver,
+
+            // **API route call کریں FirebaseService کی بجائے**
+            $firebaseResult = $this->callFirebaseNotificationAPI(
+                target: $notificationReceiver->toArray(), // Collection کو array میں convert کریں
                 title: $data['title'],
                 body: $data['body'],
                 payload: $payload
             );
+
+            if (!$firebaseResult) {
+                Log::error('Firebase API call failed', ['receiver_id' => $data['receiver_id']]);
+            }
+
             // Create notification record in database
             $notification = Notification::create([
                 'user_id' => $data['receiver_id'],
@@ -318,6 +331,7 @@ class ChatService
                 'payload' => $payload,
                 'status' => 0
             ]);
+
             return true;
 
         } catch (\Exception $e) {
@@ -333,4 +347,41 @@ class ChatService
         }
     }
 
+    /**
+     * Call Firebase notification API route
+     */
+    private function callFirebaseNotificationAPI($target, string $title, string $body, array $payload = []): bool
+    {
+        try {
+            $response = Http::timeout(30)->post(url('/api/send-firebase-notification'), [
+                'target' => $target,
+                'title' => $title,
+                'body' => $body,
+                'payload' => $payload,
+                'is_topic' => false
+            ]);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                Log::info('Firebase notification API success', [
+                    'response' => $responseData,
+                    'target_count' => is_array($target) ? count($target) : 1
+                ]);
+                return $responseData['success'] ?? false;
+            } else {
+                Log::error('Firebase notification API failed', [
+                    'status' => $response->status(),
+                    'response' => $response->body()
+                ]);
+                return false;
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Firebase notification API exception', [
+                'error_message' => $e->getMessage(),
+                'target_count' => is_array($target) ? count($target) : 1
+            ]);
+            return false;
+        }
+    }
 }

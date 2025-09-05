@@ -44,6 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/chat-history', [\App\Http\Controllers\API\ChatController::class, 'chatHistory']);
     Route::post('/chat-conversions', [\App\Http\Controllers\API\ChatController::class, 'chatConversions']);
     Route::post('temp-upload', [\App\Http\Controllers\API\ChatController::class, 'uploadChatFile']);
+    Route::post('/send-firebase-notification', [\App\Http\Controllers\API\ChatController::class, 'sendFirebaseNotification']);
 
     Route::post('get-countries', [\App\Http\Controllers\API\HomeController::class, 'getCountries']);
     Route::post('get-area/{city_id}', [\App\Http\Controllers\API\HomeController::class, 'getArea']);

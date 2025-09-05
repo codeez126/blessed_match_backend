@@ -9,13 +9,21 @@ use App\Models\Media;
 use App\Models\RoomUser;
 use App\Models\User;
 use App\Services\ChatService;
+use App\Services\FirebaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
+    protected FirebaseService $firebaseService;
+
+    public function __construct(FirebaseService $firebaseService)
+    {
+        $this->firebaseService = $firebaseService;
+    }
 
     public function createRoom(Request $request)
     {
@@ -189,5 +197,88 @@ class ChatController extends Controller
         $bytes /= (1 << (10 * $pow));
 
         return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
+    public function sendFirebaseNotification(Request $request)
+    {
+        try {
+            // Validate incoming request
+            $request->validate([
+                'target' => 'required', // token, tokens array, or topic
+                'title' => 'required|string|max:255',
+                'body' => 'required|string|max:10000',
+                'payload' => 'nullable|array',
+                'is_topic' => 'nullable|boolean'
+            ]);
+
+            // Get validated data
+            $target = $request->input('target');
+            $title = $request->input('title');
+            $body = $request->input('body');
+            $payload = $request->input('payload', []);
+            $isTopic = $request->input('is_topic', false);
+
+            Log::info('Firebase notification request received', [
+                'target_type' => is_array($target) ? 'multiple_tokens' : 'single_target',
+                'target_count' => is_array($target) ? count($target) : 1,
+                'title' => $title,
+                'is_topic' => $isTopic
+            ]);
+
+            // Send notification via Firebase service
+            $success = $this->firebaseService->sendNotification(
+                target: $target,
+                title: $title,
+                body: $body,
+                payload: $payload,
+                isTopic: $isTopic
+            );
+
+            if ($success) {
+                Log::info('Firebase notification sent successfully', [
+                    'target_count' => is_array($target) ? count($target) : 1
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Notification sent successfully',
+                    'data' => [
+                        'title' => $title,
+                        'body' => $body,
+                        'target_count' => is_array($target) ? count($target) : 1
+                    ]
+                ], 200);
+            } else {
+                Log::warning('Firebase notification failed to send');
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send notification'
+                ], 400);
+            }
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Firebase notification validation failed', [
+                'errors' => $e->errors()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            Log::error('Firebase notification exception', [
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
