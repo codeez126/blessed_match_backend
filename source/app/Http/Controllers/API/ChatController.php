@@ -213,11 +213,19 @@ class ChatController extends Controller
 
             $body = $request->input('body');
 
-// log with unicode preserved
-            Log::info('Notification body check', [
-                'raw' => $body,
-                'json_unescaped' => json_encode($body, JSON_UNESCAPED_UNICODE)
-            ]);
+// if the body looks like base64, decode it
+            if (base64_encode(base64_decode($body, true)) === $body) {
+                $decoded = base64_decode($body);
+                Log::info('Notification body decoded', [
+                    'original' => $body,
+                    'decoded' => $decoded
+                ]);
+                $body = $decoded;
+            } else {
+                Log::info('Notification body not base64', [
+                    'body' => $body
+                ]);
+            }
 
 
             // Get validated data
