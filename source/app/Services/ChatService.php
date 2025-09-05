@@ -19,14 +19,18 @@ class ChatService
 {
     protected FirebaseService $firebaseService;
 
+    // MQTT chat service میں
     public function __construct(FirebaseService $firebaseService)
     {
-        try {
+        \Log::info('MQTT Chat service - before Firebase injection');
+
         $this->firebaseService = $firebaseService;
-            \Log::info('Chat service constructor called');
-        } catch (\Exception $e) {
-            \Log::error('Constructor error: ' . $e->getMessage());
-            throw $e;
+
+        \Log::info('MQTT Chat service - after Firebase injection');
+
+        // MQTT connection status
+        if (isset($this->mqttClient)) {
+            \Log::info('MQTT connection status: ' . $this->mqttClient->isConnected());
         }
     }
 
@@ -54,6 +58,8 @@ class ChatService
             //ChatRoom
             if (!empty($data['room_id'])) {
                 $chatRoom = ChatRoom::find($data['room_id']);
+
+
             } else {
                 $chatRoom = ChatRoom::where(function ($query) use ($user, $receiver) {
                     $query->where(function ($subQuery) use ($user, $receiver) {
@@ -73,6 +79,7 @@ class ChatService
                     ]);
                 }
             }
+            \Log::info('MQTT room joined '.$chatRoom->id);
             $mqtt->publish("chat/{$data['auth_user_id']}/room-joined", json_encode([
                 'success' => true,
                 'message' => 'Room ' . $chatRoom->id . ' joined',
@@ -145,6 +152,7 @@ class ChatService
                 ]));
                 return;
             }
+            \Log::info('MQTT sending message '.$chatRoom->id);
             $offlineUsers = RoomUser::where('chat_room_id', $data['room_id'])
                 ->where('is_online', 0)
                 ->count();
