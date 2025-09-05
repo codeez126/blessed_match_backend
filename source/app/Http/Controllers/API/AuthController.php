@@ -457,7 +457,7 @@ class AuthController extends Controller
                 'marital_status_id' => 'nullable|exists:marital_statuses,id',
                 'profile_managed_by' => 'nullable|in:1,2,3,4,5',
                 'status' => 'nullable',
-                'reason_txt' => 'nullable|string|max:255',
+                'reason_txt' => 'nullable|string',
                 'client_contact' => 'nullable',
                 'number_of_children' => 'nullable|integer|min:0',
                 'children' => 'nullable|array',
