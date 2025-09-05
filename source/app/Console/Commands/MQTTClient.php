@@ -108,6 +108,9 @@ class MQTTClient extends Command
                         case 'presence':
                             $chatService->presence($payload, $mqtt);
                             break;
+                        case 'check-online-status':
+                            $chatService->checkOnlineStatus($payload, $mqtt);
+                            break;
                         case 'delete-message':
                             $chatService->deleteMessage($payload, $mqtt);
                             break;
@@ -115,6 +118,30 @@ class MQTTClient extends Command
                 };
 
                 $mqtt->connect();
+                $mqtt->onClose = function () {
+                    echo "MQTT connection closed, updating all users to offline\n";
+                    try {
+                        // Set all users to offline when MQTT disconnects
+                        User::query()->update(['is_online' => 0]);
+                        RoomUser::query()->update(['is_online' => 0]);
+                        Log::info('All users set to offline due to MQTT disconnection');
+                    } catch (\Exception $e) {
+                        Log::error('Error setting users offline on MQTT disconnect: ' . $e->getMessage());
+                    }
+                };
+
+                $mqtt->onError = function ($exception) {
+                    echo "MQTT Error: " . $exception->getMessage() . "\n";
+                    Log::error('MQTT Error: ' . $exception->getMessage());
+                    try {
+                        // Set all users to offline when MQTT error occurs
+                        User::query()->update(['is_online' => 0]);
+                        RoomUser::query()->update(['is_online' => 0]);
+                        Log::info('All users set to offline due to MQTT error');
+                    } catch (\Exception $e) {
+                        Log::error('Error setting users offline on MQTT error: ' . $e->getMessage());
+                    }
+                };
             };
 
             Worker::runAll();

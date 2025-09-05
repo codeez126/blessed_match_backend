@@ -272,6 +272,51 @@ class ChatService
             ]);
         }
     }
+    public function checkOnlineStatus(mixed $data, Client $mqtt)
+    {
+        try {
+            $validator = Validator::make($data, [
+                'receiver_id' => 'required|integer|exists:users,id'
+            ]);
+
+            if ($validator->fails()) {
+                $mqtt->publish("chat/online-status-error", json_encode([
+                    'success' => false,
+                    'message' => $validator->errors()->first()
+                ]));
+                return;
+            }
+
+            $receiverId = $data['receiver_id'];
+
+            // Get user online status
+            $user = User::find($receiverId);
+            $isOnline = $user->is_online ?? 0;
+
+            // Publish the response
+            $mqtt->publish("chat/online-status/{$receiverId}", json_encode([
+                'success' => true,
+                'user_id' => $receiverId,
+                'is_online' => $isOnline,
+                'checked_at' => now()->toDateTimeString()
+            ]));
+
+            \Log::info("✅ Online status checked", [
+                'checked_user' => $receiverId,
+                'is_online' => $isOnline
+            ]);
+
+        } catch (\Exception $e) {
+            $mqtt->publish("chat/online-status-error", json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]));
+            \Log::error("❌ Check online status error", [
+                'receiver_id' => $data['receiver_id'] ?? null,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 
 
 
