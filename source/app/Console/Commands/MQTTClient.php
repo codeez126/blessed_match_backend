@@ -97,8 +97,13 @@ class MQTTClient extends Command
                             $chatService->sendMessage($payload, $mqtt);
                             break;
                         case 'app_presence':
+                            \Log::info("App presence event received", [
+                                'payload' => $payload,
+                                'user_id' => $topic[2] ?? null
+                            ]);
                             $chatService->appPresence($payload, $mqtt, $topic[2] ?? null);
                             break;
+
                         case 'presence':
                             $chatService->presence($payload, $mqtt);
                             break;
