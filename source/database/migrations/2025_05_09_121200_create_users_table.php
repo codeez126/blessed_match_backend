@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('share_code', 10)->unique();
             $table->string('app_version')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('is_online')->default(0);
             $table->tinyInteger('onboarding_status')->default(0);
             $table->string('referal_code')->nullable();
 

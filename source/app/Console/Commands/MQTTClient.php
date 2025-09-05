@@ -68,7 +68,7 @@ class MQTTClient extends Command
                     echo "Connected to MQTT broker\n";
                     $mqtt->subscribe('chat/+');
                     $mqtt->subscribe('chat/presence/+');
-
+                    $mqtt->subscribe('app_presence/+');
                 };
 
                 $mqtt->onMessage = function ($topic, $content) use ($mqtt) {
@@ -95,6 +95,9 @@ class MQTTClient extends Command
                             break;
                         case 'send-message':
                             $chatService->sendMessage($payload, $mqtt);
+                            break;
+                        case 'app_presence':
+                            $chatService->appPresence($payload, $mqtt, $topic[2] ?? null);
                             break;
                         case 'presence':
                             $chatService->presence($payload, $mqtt);

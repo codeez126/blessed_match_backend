@@ -23,6 +23,7 @@ class User extends Authenticatable
         'share_code',
         'app_version',
         'status',
+        'is_online',
         'onboarding_status',
         'referal_code',
         'platform',

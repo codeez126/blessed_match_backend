@@ -223,9 +223,9 @@ class ChatController extends Controller
                 ]);
 
                 // use decoded string directly
-                $body = $decoded;
+                $body1 = $decoded;
             } else {
-               $body = $request->input('body');
+               $body1 = $request->input('body');
             }
 
 
@@ -233,7 +233,7 @@ class ChatController extends Controller
             // Get validated data
             $target = $request->input('target');
             $title = $request->input('title');
-            $body = $body;
+            $body = $body1;
             $payload = $request->input('payload', []);
             $isTopic = $request->input('is_topic', false);
 
