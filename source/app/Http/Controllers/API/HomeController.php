@@ -16,6 +16,7 @@ use App\Models\HouseStatus;
 use App\Models\Language;
 use App\Models\MaritalStatus;
 use App\Models\Nationality;
+use App\Models\Notification;
 use App\Models\Occupation;
 use App\Models\OfficeType;
 use App\Models\Pages;
@@ -36,9 +37,11 @@ class HomeController extends Controller
         if ($loggedInUser) {
             $deviceToken = optional($loggedInUser->deviceToken)->device_token;
             $is_login = true;
+            $unreadNotificationCount = Notification::where('user_id', $loggedInUser->id)->where('status', 0)->count();
         } else {
             $deviceToken = null;
             $is_login = false;
+            $unreadNotificationCount = 0;
         }
 
         $perPage = $request->get('per_page', 50);
@@ -70,6 +73,7 @@ class HomeController extends Controller
         return $this->apiResponse([
             'cards' => $cards,
             'unReadRoomsCount' => $unReadRoomsCount,
+            'unreadNotificationCount' => $unreadNotificationCount,
             'pagination' => [
                 'per_page' => $clients->perPage(),
                 'total_users' => $clients->total(),
