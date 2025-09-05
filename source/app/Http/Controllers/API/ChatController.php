@@ -225,9 +225,7 @@ class ChatController extends Controller
                 // use decoded string directly
                 $body = $decoded;
             } else {
-                Log::info('Notification body not base64', [
-                    'body' => $body
-                ]);
+               $body = $request->input('body');
             }
 
 
@@ -235,7 +233,7 @@ class ChatController extends Controller
             // Get validated data
             $target = $request->input('target');
             $title = $request->input('title');
-            $body = $request->input('body');
+            $body = $body;
             $payload = $request->input('payload', []);
             $isTopic = $request->input('is_topic', false);
 
