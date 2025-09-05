@@ -214,7 +214,7 @@ class ChatController extends Controller
             // Get validated data
             $target = $request->input('target');
             $title = $request->input('title');
-            $body = $request->input('body');
+            $body = utf8_decode(utf8_encode($request->input('body')));
             $payload = $request->input('payload', []);
             $isTopic = $request->input('is_topic', false);
 
