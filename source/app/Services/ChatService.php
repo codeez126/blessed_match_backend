@@ -111,6 +111,9 @@ class ChatService
 
     public function sendMessage(mixed $data, Client $mqtt)
     {
+        \Log::info("🔔 furqan", [
+        ]);
+
         $validator = Validator::make($data, [
             'room_id' => 'required|integer|exists:chat_rooms,id',
             'type' => 'required|integer',
