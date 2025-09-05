@@ -291,7 +291,7 @@ class ChatService
 
             // Get user online status
             $user = User::find($receiverId);
-            $isOnline = $user->is_online ?? 0;
+            $isOnline = $user->is_online;
 
             // Publish the response
             $mqtt->publish("chat/online-status/{$receiverId}", json_encode([
